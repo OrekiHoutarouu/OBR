@@ -1,4 +1,4 @@
-[submodule "firmware"]
-	path = firmware
+[submodule "open_rdk"]
+	path = open_rdk
 	url = https://github.com/Mr-SweetRice/Open-RDK
 	branch = main
