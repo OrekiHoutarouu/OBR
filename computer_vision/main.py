@@ -8,18 +8,21 @@ def main():
         frame = webcam.get_frame(capture)
         frame_center_x = utils.get_frame_center_x(frame)
 
-        frame_gray = image_processing.convert_to_gray(frame)
+        frame_grayscale = image_processing.convert_to_grayscale(frame)
+        frame_hsv = image_processing.convert_to_hsv(frame)
 
-        frame_blur = image_processing.blur_frame(frame)
-        gray_frame_blur = image_processing.blur_frame(frame_gray)
+        frame_grayscale_blur = image_processing.blur_frame(frame_grayscale)
+        frame_hsv_blur = image_processing.blur_frame(frame_hsv)
 
-        _, gray_frame_threshold = image_processing.set_threshold_black_white(gray_frame_blur)
+        _, frame_black_mask = image_processing.apply_black_mask(frame_grayscale_blur)
+        frame_green_mask = image_processing.apply_green_mask(frame_hsv_blur)
 
-        gray_frame_contours, _ = line_detector.find_contours(gray_frame_threshold)
-        
-        line_center = line_detector.get_line_center(gray_frame_contours, frame)
+        line_contours, _ = utils.find_contours(frame_black_mask)
+        green_contours, _ = utils.find_contours(frame_green_mask)
 
-        line_offset = utils.get_offset(frame_center_x, line_center)
+        line_center_x = line_detector.get_line_center(line_contours)
+
+        line_offset = utils.get_offset(frame_center_x, line_center_x)
 
         if line_offset > 0:
             print("left")
@@ -28,7 +31,8 @@ def main():
             print("right")
             print(line_offset)
 
-        cv2.imshow("Webcam", gray_frame_threshold)
+        cv2.imshow("Webcam", frame_black_mask)
+        cv2.imshow("Green mask", frame_green_mask)
 
         if cv2.waitKey(1) == ord("q"):
             break
