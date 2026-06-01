@@ -16,23 +16,30 @@ def main():
 
         _, frame_black_mask = image_processing.apply_black_mask(frame_grayscale_blur)
         frame_green_mask = image_processing.apply_green_mask(frame_hsv_blur)
+        frame_red_mask = image_processing.apply_red_mask(frame_hsv_blur)
 
         line_contours, _ = utils.find_contours(frame_black_mask)
         green_contours, _ = utils.find_contours(frame_green_mask)
+        red_contours, _ = utils.find_contours(frame_red_mask)
 
         line_center_x = line_detector.get_line_center(line_contours)
 
         line_offset = utils.get_offset(frame_center_x, line_center_x)
 
-        if line_offset > 0:
-            print("left")
-            print(line_offset)
-        else:
-            print("right")
-            print(line_offset)
-
-        cv2.imshow("Webcam", frame_black_mask)
+        cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
+        cv2.imshow("Red mask", frame_red_mask)
+
+        cv2.imshow("Frame", frame)
+        cv2.imshow("Grayscale frame", frame_grayscale)
+        cv2.imshow("HSV scale frame", frame_hsv)
+
+
+        def mouse_callback(event, x, y, flags, param):
+            if event == cv2.EVENT_LBUTTONDOWN:
+                print(frame_hsv[y, x])
+
+        cv2.setMouseCallback("Frame", mouse_callback)
 
         if cv2.waitKey(1) == ord("q"):
             break

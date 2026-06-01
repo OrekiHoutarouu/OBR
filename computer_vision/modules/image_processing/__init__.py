@@ -80,3 +80,27 @@ def apply_green_mask(frame):
     )
 
     return frame_green_mask
+
+
+def apply_red_mask(frame):
+    lower_red1 = numpy.array([0, 120, 150])
+    upper_red1 = numpy.array([5, 255, 255])
+
+    lower_red2 = numpy.array([170, 120, 150])
+    upper_red2 = numpy.array([180, 255, 255])
+
+    red_mask1 = cv2.inRange(
+    frame,
+    lower_red1,
+    upper_red1
+    )
+
+    red_mask2 = cv2.inRange(
+        frame,
+        lower_red2,
+        upper_red2
+    )
+
+    red_mask = red_mask1 | red_mask2
+
+    return red_mask
