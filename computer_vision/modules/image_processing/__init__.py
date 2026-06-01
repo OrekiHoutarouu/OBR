@@ -83,6 +83,15 @@ def apply_green_mask(frame):
 
 
 def apply_red_mask(frame):
+    """Applies a red mask to the frame.
+
+    Args:
+        frame (numpy.ndarray): The input frame.
+
+    Returns:
+        numpy.ndarray: The frame with the green mask applied.
+    """
+
     lower_red1 = numpy.array([0, 120, 150])
     upper_red1 = numpy.array([5, 255, 255])
 
