@@ -30,7 +30,7 @@ def blur_frame(frame):
     return frame_blur
 
 
-def set_threshold(frame):
+def set_threshold_black_white(frame):
     """Set the threshold for the frame.
 
     Args:

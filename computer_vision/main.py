@@ -13,7 +13,7 @@ def main():
         frame_blur = image_processing.blur_frame(frame)
         gray_frame_blur = image_processing.blur_frame(frame_gray)
 
-        _, gray_frame_threshold = image_processing.set_threshold(gray_frame_blur)
+        _, gray_frame_threshold = image_processing.set_threshold_black_white(gray_frame_blur)
 
         gray_frame_contours, _ = line_detector.find_contours(gray_frame_threshold)
         
