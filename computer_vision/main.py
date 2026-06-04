@@ -1,4 +1,4 @@
-from modules import green_detector, image_processing, line_detector, utils, webcam
+from modules import green_detector, image_processing, line_detector, track_features, utils, webcam
 import cv2
 
 def main():
@@ -7,10 +7,9 @@ def main():
     while True:
         frame = webcam.get_frame(capture)
         frame_center_x = utils.get_frame_center_x(frame)
-        follow_roi = utils.get_follow_roi(frame)
 
-        frame_grayscale = image_processing.convert_to_grayscale(follow_roi)
-        frame_hsv = image_processing.convert_to_hsv(follow_roi)
+        frame_grayscale = image_processing.convert_to_grayscale(frame)
+        frame_hsv = image_processing.convert_to_hsv(frame)
 
         frame_grayscale_blur = image_processing.blur_frame(frame_grayscale)
         frame_hsv_blur = image_processing.blur_frame(frame_hsv)
@@ -44,36 +43,24 @@ def main():
         green_contours, _ = utils.find_contours(frame_green_mask)
         red_contours, _ = utils.find_contours(frame_red_mask)
 
-        line_center_x = line_detector.get_line_center_x(line_contours, 15000)
+        line_info = line_detector.get_line_info(line_contours, frame_center_x, 15000)
         green_center_x = green_detector.get_green_center_x(green_contours, 3000)
 
-        line_offset = utils.get_offset(frame_center_x, line_center_x)
-        green_offset = utils.get_offset(line_center_x, green_center_x)
+        green_offset = utils.get_offset(line_info["center_x"], green_center_x)
 
-        if green_offset == line_center_x:
+        if green_offset == line_info["center_x"]:
             green_offset = 0
 
-        # Debug
+        # DEBUG
 
         cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
         cv2.imshow("Red mask", frame_red_mask)
 
-        cv2.imshow("ROI", follow_roi)
-        cv2.imshow("Frame", frame)
-        cv2.imshow("Grayscale frame", frame_grayscale)
-        cv2.imshow("HSV scale frame", frame_hsv)
+        possible_gap = track_features.detect_possible_gap(frame_black_mask, line_contours)
 
-        if green_offset > 0:
-            print(f"left: {green_offset}")
-        elif green_offset < 0:
-            print(f"right: {green_offset}")
-
-        def mouse_callback(event, x, y, flags, param):
-            if event == cv2.EVENT_LBUTTONDOWN:
-                print(frame_hsv[y, x])
-
-        cv2.setMouseCallback("Frame", mouse_callback)
+        #print(line_info)
+        print(f"Possible gap: {possible_gap}")
 
         if cv2.waitKey(1) == ord("q"):
             break
