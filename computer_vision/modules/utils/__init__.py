@@ -32,6 +32,22 @@ def get_frame_center_x(frame):
     return frame_center_x
 
 
+def get_follow_roi(frame):
+    """Get the region of interest (ROI) for following the line.
+
+    Args:
+        frame (numpy.ndarray): The input frame.
+
+    Returns:
+        numpy.ndarray: The region of interest for following the line.
+    """
+
+    height, width = frame.shape[:2]
+    follow_roi = frame[height//2:, :]
+
+    return follow_roi
+
+
 def get_offset(setpoint, measured_value):
     """Get the offset between the setpoint and the measured value.
 

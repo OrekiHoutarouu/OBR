@@ -7,9 +7,10 @@ def main():
     while True:
         frame = webcam.get_frame(capture)
         frame_center_x = utils.get_frame_center_x(frame)
+        follow_roi = utils.get_follow_roi(frame)
 
-        frame_grayscale = image_processing.convert_to_grayscale(frame)
-        frame_hsv = image_processing.convert_to_hsv(frame)
+        frame_grayscale = image_processing.convert_to_grayscale(follow_roi)
+        frame_hsv = image_processing.convert_to_hsv(follow_roi)
 
         frame_grayscale_blur = image_processing.blur_frame(frame_grayscale)
         frame_hsv_blur = image_processing.blur_frame(frame_hsv)
@@ -58,6 +59,7 @@ def main():
         cv2.imshow("Green mask", frame_green_mask)
         cv2.imshow("Red mask", frame_red_mask)
 
+        cv2.imshow("ROI", follow_roi)
         cv2.imshow("Frame", frame)
         cv2.imshow("Grayscale frame", frame_grayscale)
         cv2.imshow("HSV scale frame", frame_hsv)
