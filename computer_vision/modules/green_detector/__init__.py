@@ -1,21 +1,21 @@
 import cv2
 
-def get_line_center_x(contours, min_area=15000):
-    """Gets the center of the line.
+def get_green_center_x(contours, min_area=3000):
+    """Gets the center of the green square.
 
     Args:
         contours (list): A list of contours found in the frame.
-        min_area (int): The minimum area of the line.
+        min_area (int): The minimum area of the green square.
 
     Returns:
-        int: The x-coordinate of the line's center.
+        int: The x-coordinate of the green square's center.
     """
 
     if not contours:
         return 0
 
     largest_contour = max(contours, key=cv2.contourArea)
-    
+
     area = cv2.contourArea(largest_contour)
     if area < min_area:
         return 0
@@ -24,6 +24,6 @@ def get_line_center_x(contours, min_area=15000):
     if not moments["m00"]:
         return 0
 
-    line_center_x = int(moments["m10"] / moments["m00"])
+    green_center_x = int(moments["m10"] / moments["m00"])
 
-    return line_center_x
+    return green_center_x
