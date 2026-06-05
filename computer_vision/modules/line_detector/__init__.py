@@ -15,6 +15,7 @@ def get_line_info(contours, frame_center_x, min_area=15000):
 
     line_info = {
         "found": False,
+        "largest_contour": 0,
         "area": 0,
         "center_x": 0,
         "offset": 0
@@ -34,6 +35,7 @@ def get_line_info(contours, frame_center_x, min_area=15000):
         return line_info
     
     line_info["found"] = True
+    line_info["largest_contour"] = largest_contour
     line_info["area"] = area
     line_info["center_x"] = get_line_center_x(moments)
     line_info["offset"] = utils.get_offset(frame_center_x, line_info["center_x"])

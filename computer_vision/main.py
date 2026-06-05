@@ -53,14 +53,15 @@ def main():
 
         # DEBUG
 
+        possible_gap = track_features.detect_possible_gap(frame_black_mask, line_contours)
+        print(f"Possible gap: {possible_gap}")
+        
+        intersection = track_features.detect_intersection(frame_black_mask,line_contours, line_info)
+        print(f"Intersection: {intersection}")
+
         cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
         cv2.imshow("Red mask", frame_red_mask)
-
-        possible_gap = track_features.detect_possible_gap(frame_black_mask, line_contours)
-
-        #print(line_info)
-        print(f"Possible gap: {possible_gap}")
 
         if cv2.waitKey(1) == ord("q"):
             break
