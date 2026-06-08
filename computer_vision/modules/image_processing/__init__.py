@@ -30,6 +30,26 @@ def convert_to_hsv(frame):
     return frame_hsv
 
 
+def get_hsv_clahe(frame):
+    """Applies CLAHE to the HSV frame.
+
+    Args:
+        frame (numpy.ndarray): The input frame in HSV scale.
+
+    Returns:
+        numpy.ndarray: The frame with CLAHE applied.
+    """
+
+    h, s, v = cv2.split(frame)
+
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    v_clahe = clahe.apply(v)
+
+    frame_hsv_clahe = cv2.merge((h, s, v_clahe))
+
+    return frame_hsv_clahe
+
+
 def blur_frame(frame):
     """Blurs the frame.
 
@@ -55,7 +75,7 @@ def apply_black_mask(frame):
         numpy.ndarray: The frame with the black mask applied.
     """
 
-    frame_black_mask = cv2.threshold(frame, 127, 255, cv2.THRESH_BINARY_INV)
+    frame_black_mask = cv2.threshold(frame, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     return frame_black_mask
 

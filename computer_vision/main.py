@@ -10,13 +10,14 @@ def main():
 
         frame_grayscale = image_processing.convert_to_grayscale(frame)
         frame_hsv = image_processing.convert_to_hsv(frame)
+        frame_hsv_clahe = image_processing.get_hsv_clahe(frame_hsv)
 
         frame_grayscale_blur = image_processing.blur_frame(frame_grayscale)
-        frame_hsv_blur = image_processing.blur_frame(frame_hsv)
+        frame_hsv_clahe_blur = image_processing.blur_frame(frame_hsv_clahe)
 
         _, frame_black_mask = image_processing.apply_black_mask(frame_grayscale_blur)
-        frame_green_mask = image_processing.apply_green_mask(frame_hsv_blur)
-        frame_red_mask = image_processing.apply_red_mask(frame_hsv_blur)
+        frame_green_mask = image_processing.apply_green_mask(frame_hsv_clahe_blur)
+        frame_red_mask = image_processing.apply_red_mask(frame_hsv_clahe_blur)
 
         frame_black_mask = cv2.bitwise_and(
             frame_black_mask,
