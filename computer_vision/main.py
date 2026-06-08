@@ -1,4 +1,4 @@
-from modules import green_detector, image_processing, line_detector, track_features, utils, webcam
+from modules import green_detector, image_processing, line_detector, track_features, track_geometry, utils, webcam
 import cv2
 
 def main():
@@ -45,20 +45,12 @@ def main():
         red_contours, _ = utils.find_contours(frame_red_mask)
 
         line_info = line_detector.get_line_info(line_contours, frame_center_x, 15000)
-        green_center_x = green_detector.get_green_center_x(green_contours, 3000)
 
-        green_offset = utils.get_offset(line_info["center_x"], green_center_x)
-
-        if green_offset == line_info["center_x"]:
-            green_offset = 0
+        track_info = track_geometry.get_track_info(frame_black_mask, line_contours, line_info)
 
         # DEBUG
 
-        possible_gap = track_features.detect_possible_gap(frame_black_mask, line_contours)
-        print(f"Possible gap: {possible_gap}")
-        
-        intersection = track_features.detect_intersection(frame_black_mask,line_contours, line_info)
-        print(f"Intersection: {intersection}")
+        print("Track info:", track_info)
 
         cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
