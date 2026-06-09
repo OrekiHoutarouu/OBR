@@ -15,6 +15,63 @@ def find_contours(frame):
     return frame_contours
 
 
+def get_contour_info(contours, frame_center_x, min_area):
+    """Get information about the line based on the contours found in the frame.
+
+    Args:
+        contours (list): A list of contours found in the frame.
+        frame_center_x (int): The x-coordinate of the frame's center.
+        min_area (int, optional): The minimum area for a contour to be considered a line. Defaults to 15000.
+
+    Returns:
+        dict: A dictionary containing information about the detected line.
+    """
+
+    contour_info = {
+        "found": False,
+        "largest_contour": 0,
+        "area": 0,
+        "center_x": 0,
+        "offset": 0
+    }
+
+    if not contours:
+        return contour_info
+    
+    largest_contour = max(contours, key=cv2.contourArea)
+    
+    area = cv2.contourArea(largest_contour)
+    if area < min_area:
+        return contour_info
+    
+    moments = cv2.moments(largest_contour)
+    if not moments["m00"]:
+        return contour_info
+    
+    contour_info["found"] = True
+    contour_info["largest_contour"] = largest_contour
+    contour_info["area"] = area
+    contour_info["center_x"] = get_contour_center_x(moments)
+    contour_info["offset"] = get_offset(frame_center_x, contour_info["center_x"])
+
+    return contour_info
+
+
+def get_contour_center_x(moments):
+    """Get the x-coordinate of the line's center based on the moments of the contour.
+
+    Args:
+        moments (dict): A dictionary containing the moments of the contour.
+
+    Returns:
+        int: The x-coordinate of the line's center.
+    """
+
+    line_center_x = int(moments["m10"] / moments["m00"])
+
+    return line_center_x
+
+
 def get_frame_center_x(frame):
     """Get the x-coordinate of the center of the frame.
 

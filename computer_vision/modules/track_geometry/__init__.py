@@ -1,6 +1,34 @@
 from modules import utils
 import cv2
 
+track_info = {
+    "contour_count": 0,
+    "largest_contour": 0,
+    "largest_area": 0,
+
+    "bounding_box": (0, 0, 0, 0),
+    "bounding_box_x": 0,
+    "bounding_box_y": 0,
+    "bounding_box_width": 0,
+    "bounding_box_height": 0,
+
+    "aspect_ratio": 0,
+    "fill_ratio": 0,
+
+    "line_pixels": 0,
+    "top_pixels": 0,
+    "bottom_pixels": 0,
+
+    "hull": 0,
+    "hull_area": 0,
+    "solidity": 0,
+
+    "touches_left_border": False,
+    "touches_right_border": False,
+    "touches_top_border": False,
+    "touches_bottom_border": False
+}
+
 def get_track_info(frame, contours, line_info):
     """Get information about the track based on the frame, contours, and line information.
 
@@ -13,34 +41,6 @@ def get_track_info(frame, contours, line_info):
         _type_: A dictionary containing the track information.
     """
 
-    track_info = {
-        "contour_count": 0,
-        "largest_contour": 0,
-        "largest_area": 0,
-
-        "bounding_box": (0, 0, 0, 0),
-        "bounding_box_x": 0,
-        "bounding_box_y": 0,
-        "bounding_box_width": 0,
-        "bounding_box_height": 0,
-
-        "aspect_ratio": 0,
-        "fill_ratio": 0,
-
-        "line_pixels": 0,
-        "top_pixels": 0,
-        "bottom_pixels": 0,
-
-        "hull": 0,
-        "hull_area": 0,
-        "solidity": 0,
-
-        "touches_left_border": False,
-        "touches_right_border": False,
-        "touches_top_border": False,
-        "touches_bottom_border": False
-    }
-    
     if not line_info["found"]:
         return track_info
     

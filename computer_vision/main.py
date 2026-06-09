@@ -1,4 +1,4 @@
-from modules import green_detector, image_processing, line_detector, track_features, track_geometry, utils, webcam
+from modules import image_processing, track_features, track_geometry, utils, webcam
 import cv2
 
 def main():
@@ -44,13 +44,18 @@ def main():
         green_contours, _ = utils.find_contours(frame_green_mask)
         red_contours, _ = utils.find_contours(frame_red_mask)
 
-        line_info = line_detector.get_line_info(line_contours, frame_center_x, 15000)
+        line_info = utils.get_contour_info(line_contours, frame_center_x, 15000)
+        green_info = utils.get_contour_info(green_contours, frame_center_x, 3000)
+        red_info = utils.get_contour_info(red_contours, frame_center_x, 3000)
 
         track_info = track_geometry.get_track_info(frame_black_mask, line_contours, line_info)
 
         # DEBUG
 
         print("Track info:", track_info)
+        print("Line info:", line_info)
+        print("Green info:", green_info)
+        print("Red info:", red_info)
 
         cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
