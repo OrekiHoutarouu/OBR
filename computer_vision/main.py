@@ -52,10 +52,8 @@ def main():
 
         # DEBUG
 
-        print("Track info:", track_info)
-        print("Line info:", line_info)
-        print("Green info:", green_info)
-        print("Red info:", red_info)
+        current_feature = track_features.detect_current_feature(track_info, line_info)
+        print(current_feature)
 
         cv2.imshow("Black mask", frame_black_mask)
         cv2.imshow("Green mask", frame_green_mask)
