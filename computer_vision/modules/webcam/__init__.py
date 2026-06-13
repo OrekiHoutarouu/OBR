@@ -31,5 +31,5 @@ def get_frame(capture):
             return frame
         
     except BaseException:
-        print("Deu errado")
+        print("Couldn't get frame")
 3
