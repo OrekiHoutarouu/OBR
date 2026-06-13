@@ -1,12 +1,26 @@
 from modules import image_processing, track_features, track_geometry, utils, webcam
 import cv2
+import time
+from openrdk import CommsRuntime
+
+# PYTHONPATH=host/main/src python3 computer_vision/main.py
 
 def main():
+    openrdk = CommsRuntime(auto_start=True, enable_webview=False, enable_webview_updates=False)
+    time.sleep(2)
+    openrdk.list_devices(verbose=True)
+    motor = openrdk.traction(openrdk.get_serial_by_name("motor_samuel"))
+
     capture = webcam.get_webcam()
+    time.sleep(2)
 
     while True:
         frame = webcam.get_frame(capture)
-        frame_center_x = utils.get_frame_center_x(frame)
+
+        if frame != None:
+            frame_center_x = utils.get_frame_center_x(frame)
+        else:
+            return
 
         frame_grayscale = image_processing.convert_to_grayscale(frame)
         frame_hsv = image_processing.convert_to_hsv(frame)
@@ -55,9 +69,12 @@ def main():
         current_feature = track_features.detect_current_feature(track_info, line_info)
         print(current_feature)
 
-        cv2.imshow("Black mask", frame_black_mask)
-        cv2.imshow("Green mask", frame_green_mask)
-        cv2.imshow("Red mask", frame_red_mask)
+        if current_feature == "STRAIGHT":
+            motor.move(200) 
+
+        #cv2.imshow("Black mask", frame_black_mask)
+        #cv2.imshow("Green mask", frame_green_mask)
+        #cv2.imshow("Red mask", frame_red_mask)
 
         if cv2.waitKey(1) == ord("q"):
             break

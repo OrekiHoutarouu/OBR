@@ -24,8 +24,12 @@ def get_frame(capture):
     Returns:
         numpy.ndarray: The current frame from the webcam, or None if unsuccessful.
     """
+    try:
+        success, frame = capture.read()
 
-    success, frame = capture.read()
-
-    if success:
-        return frame
+        if success:
+            return frame
+        
+    except BaseException:
+        print("Deu errado")
+3
