@@ -1,6 +1,5 @@
-from modules import utils
+from computer_vision.modules import utils
 import cv2
-
 
 def get_track_info(frame, contours, line_info):
     """Get information about the track based on the frame, contours, and line information.
