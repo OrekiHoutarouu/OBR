@@ -1,4 +1,4 @@
-from computer_vision.modules import utils
+from computer_vision.core import utils
 import cv2
 
 def get_track_info(frame, contours, line_info):

@@ -1,5 +1,6 @@
 from computer_vision.vision import update
-from computer_vision.modules import webcam
+from computer_vision.core import webcam
+from controller import line_follower
 from openrdk import CommsRuntime
 from time import sleep
 
@@ -7,15 +8,18 @@ from time import sleep
 
 def main():
     capture = webcam.get_webcam()
-    #openrdk = CommsRuntime(auto_start=True, enable_webview=False, enable_webview_updates=False)
-    
-    #sleep(2)
+    openrdk = CommsRuntime(auto_start=True, enable_webview=False, enable_webview_updates=False)
 
-    #openrdk.list_devices(verbose=True)
-    #motor = openrdk.traction(openrdk.get_serial_by_name("motor_samuel"))
+    sleep(2)
+
+    openrdk.list_devices(verbose=True)
+    motor = openrdk.traction(openrdk.get_serial_by_name("motor_samuel"))
 
     while True:
         vision_state = update(capture)
+        line_follower.update(vision_state, motor)
+
+        # DEBUG
 
         print(vision_state["current_feature"])
 

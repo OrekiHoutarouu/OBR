@@ -1,8 +1,17 @@
-from .modules import image_processing, track_features, track_geometry, utils, webcam
+from .core import image_processing, track_features, track_geometry, utils, webcam
 import cv2
 import time
 
 def update(capture):
+    """Update the vision state based on the current frame from the webcam.
+
+    Args:
+        capture (cv2.VideoCapture): The webcam capture object.
+
+    Returns:
+        dict: A dictionary containing the updated vision state.
+    """
+
     frame = webcam.get_frame(capture)
 
     if frame is None:

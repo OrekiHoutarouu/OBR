@@ -1,5 +1,5 @@
 import cv2
-from modules import webcam
+from core import webcam
 import time 
 from openrdk import CommsRuntime
 import subprocess
