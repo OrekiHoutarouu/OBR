@@ -14,8 +14,8 @@ def update(vision_state, left_motor, right_motor):
     error = vision_state["line_info"]["offset"]
     correction = pid.update(error)
 
-    left_speed = BASE_SPEED + correction
-    right_speed = BASE_SPEED - correction
+    left_speed = BASE_SPEED - correction
+    right_speed = BASE_SPEED + correction
 
     left_speed = max(-255, min(255, left_speed))
     right_speed = max(-255, min(255, right_speed))
