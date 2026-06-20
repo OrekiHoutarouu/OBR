@@ -1,6 +1,6 @@
 from .core import pid
 
-BASE_SPEED = 30
+BASE_SPEED = 10
 
 def update(vision_state, left_motor, right_motor):
     """Updates the motor speeds based on the vision state using a PID controller.
@@ -20,7 +20,7 @@ def update(vision_state, left_motor, right_motor):
     left_speed = max(-255, min(255, left_speed))
     right_speed = max(-255, min(255, right_speed))
 
-    if vision_state["current_feature"] == "STRAIGHT":
+    if vision_state["line_info"]["found"] == True and vision_state["current_feature"] != "GAP":
         left_motor.move(left_speed)
         right_motor.move(-right_speed)
 

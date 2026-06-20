@@ -1,4 +1,4 @@
-def detect_current_feature(track_info, line_info):
+def detect_current_feature(track_info, line_info, frame):
     """Detect the current feature of the track based on the track information and line information.
 
     Args:

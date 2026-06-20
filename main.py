@@ -24,7 +24,7 @@ def main():
 
         # DEBUG
 
-        print(vision_state["current_feature"])
+        #print(vision_state["line_info"]["offset"])
 
 if __name__ == "__main__":
     main()

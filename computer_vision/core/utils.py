@@ -94,6 +94,7 @@ def get_roi(frame, region):
 
     Args:
         frame (numpy.ndarray): The input frame.
+        region (string): The region of interest.
 
     Returns:
         numpy.ndarray: The region of interest for following the line.

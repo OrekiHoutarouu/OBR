@@ -13,7 +13,6 @@ def update(capture):
     """
 
     frame = webcam.get_frame(capture)
-
     if frame is None:
         return
     
@@ -51,7 +50,9 @@ def update(capture):
         )
     )
 
-    line_contours, _ = utils.find_contours(frame_black_mask)
+    follow_line_roi = utils.get_roi(frame_black_mask, "bottom")
+
+    line_contours, _ = utils.find_contours(follow_line_roi)
     green_contours, _ = utils.find_contours(frame_green_mask)
     red_contours, _ = utils.find_contours(frame_red_mask)
 
@@ -61,7 +62,9 @@ def update(capture):
 
     track_info = track_geometry.get_track_info(frame_black_mask, line_contours, line_info)
 
-    current_feature = track_features.detect_current_feature(track_info, line_info)
+    current_feature = track_features.detect_current_feature(track_info, line_info, frame_black_mask)
+
+    #cv2.imwrite("Frame.jpg", follow_line_roi)
 
     return {
         "current_feature": current_feature,
