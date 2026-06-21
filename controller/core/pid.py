@@ -1,8 +1,8 @@
 from time import time
 
-KP = 0.11
+KP = 0.12
 KI = 0
-KD = 0
+KD = 0.02
 
 integral = 0
 previous_error = 0

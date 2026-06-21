@@ -19,8 +19,13 @@ def main():
     motor_2 = openrdk.traction(openrdk.get_serial_by_name("right_motor"))
 
     while True:
-        vision_state = vision.update(capture)
-        line_follower.update(vision_state, motor_1, motor_2)
+        try:
+            vision_state = vision.update(capture)
+            line_follower.update(vision_state, motor_1, motor_2)
+        except KeyboardInterrupt:
+            motor_1.stop()
+            motor_2.stop()
+            exit()
 
         # DEBUG
 
