@@ -103,9 +103,9 @@ def get_roi(frame, region):
     height, width = frame.shape
 
     if region == "top":
-        roi = frame[:height//2, :]
+        roi = frame[:int(height * 0.4), :]
     elif region == "bottom":
-        roi = frame[height//2:, :]
+        roi = frame[int(height * 0.4):, :]
 
     return roi
 

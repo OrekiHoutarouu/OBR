@@ -1,6 +1,6 @@
 from .core import pid
 
-BASE_SPEED = 15
+BASE_SPEED = 20
 
 def update(vision_state, left_motor, right_motor):
     """Updates the motor speeds based on the vision state using a PID controller.

@@ -1,10 +1,12 @@
 from computer_vision import vision
 from computer_vision.core import webcam
+from computer_vision.debug_server import app, start
 from controller import line_follower
 from openrdk import CommsRuntime
 from time import sleep
 
-# PYTHONPATH=open_rdk/host/main/src python3 main.py
+# Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
+# View webcam at "http://192.168.137.101:5000/video"
 
 def main():
     capture = webcam.get_webcam()
@@ -18,6 +20,8 @@ def main():
     motor_1 = openrdk.traction(openrdk.get_serial_by_name("left_motor"))
     motor_2 = openrdk.traction(openrdk.get_serial_by_name("right_motor"))
 
+    start()
+
     while True:
         try:
             vision_state = vision.update(capture)
@@ -26,10 +30,6 @@ def main():
             motor_1.stop()
             motor_2.stop()
             exit()
-
-        # DEBUG
-
-        #print(vision_state["line_info"]["offset"])
 
 if __name__ == "__main__":
     main()

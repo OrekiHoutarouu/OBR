@@ -2,6 +2,8 @@ from .core import image_processing, track_features, track_geometry, utils, webca
 import cv2
 import time
 
+last_frame = None
+
 def update(capture):
     """Update the vision state based on the current frame from the webcam.
 
@@ -15,6 +17,8 @@ def update(capture):
     frame = webcam.get_frame(capture)
     if frame is None:
         return
+    
+    global last_frame
     
     frame_center_x = utils.get_frame_center_x(frame)
 
@@ -51,6 +55,7 @@ def update(capture):
     #)
 
     follow_line_roi = utils.get_roi(frame_black_mask, "bottom")
+    last_frame = follow_line_roi.copy()
 
     line_contours, _ = utils.find_contours(follow_line_roi)
     #green_contours, _ = utils.find_contours(frame_green_mask)
