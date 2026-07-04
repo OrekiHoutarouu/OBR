@@ -6,7 +6,7 @@ from openrdk import CommsRuntime
 from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
-# View webcam at "http://192.168.137.101:5000/video"
+# View webcam at "http://localhost:5000/video"
 
 def main():
     capture = webcam.get_webcam()
@@ -31,7 +31,6 @@ def main():
             motor_1.stop()
             motor_2.stop()
             openrdk.stop()
-            app.stop()
             
             exit()
 

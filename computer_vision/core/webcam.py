@@ -1,3 +1,4 @@
+import platform
 import cv2
 
 def get_webcam():
@@ -7,9 +8,14 @@ def get_webcam():
         cv2.VideoCapture: The user's main webcam capture object.
     """
     
-    capture = cv2.VideoCapture("/dev/video0", cv2.CAP_V4L2)
+    if platform.system() == "Windows":
+        capture = cv2.VideoCapture(0)
+    else:
+        capture = cv2.VideoCapture("/dev/video0", cv2.CAP_V4L2)
 
     if not capture.isOpened():
+        print("Error: Couldn't open webcam.")
+
         exit()
 
     return capture
