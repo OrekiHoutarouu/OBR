@@ -100,7 +100,7 @@ def get_roi(frame, region):
         numpy.ndarray: The region of interest for following the line.
     """
 
-    height, width = frame.shape
+    height, width = frame.shape[:2]
 
     if region == "top":
         roi = frame[:int(height * 0.4), :]

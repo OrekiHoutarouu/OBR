@@ -18,11 +18,13 @@ def update(capture):
     if frame is None:
         return
     
+    follow_line_roi = utils.get_roi(frame, "bottom")
+
     global last_frame
     
-    frame_center_x = utils.get_frame_center_x(frame)
+    frame_center_x = utils.get_frame_center_x(follow_line_roi)
 
-    frame_grayscale = image_processing.convert_to_grayscale(frame)
+    frame_grayscale = image_processing.convert_to_grayscale(follow_line_roi)
     #frame_hsv = image_processing.convert_to_hsv(frame)
     #frame_hsv_clahe = image_processing.get_hsv_clahe(frame_hsv)
 
@@ -54,10 +56,9 @@ def update(capture):
     #    )
     #)
 
-    follow_line_roi = utils.get_roi(frame_black_mask, "bottom")
-    last_frame = follow_line_roi.copy()
+    last_frame = frame_black_mask.copy()
 
-    line_contours, _ = utils.find_contours(follow_line_roi)
+    line_contours, _ = utils.find_contours(frame_black_mask)
     #green_contours, _ = utils.find_contours(frame_green_mask)
     #red_contours, _ = utils.find_contours(frame_red_mask)
 

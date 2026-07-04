@@ -28,6 +28,8 @@ def main():
             line_follower.update(vision_state, motor_1, motor_2)
 
         except KeyboardInterrupt:
+            print("Stopping execution...")
+            
             motor_1.stop()
             motor_2.stop()
             openrdk.stop()

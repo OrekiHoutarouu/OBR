@@ -21,6 +21,8 @@ def main():
             vision_state = vision.update(capture)
 
         except KeyboardInterrupt:
+            print("Stopping execution...")
+            
             exit()
 
 if __name__ == "__main__":
