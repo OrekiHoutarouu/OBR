@@ -26,9 +26,13 @@ def main():
         try:
             vision_state = vision.update(capture)
             line_follower.update(vision_state, motor_1, motor_2)
+
         except KeyboardInterrupt:
             motor_1.stop()
             motor_2.stop()
+            openrdk.stop()
+            app.stop()
+            
             exit()
 
 if __name__ == "__main__":
