@@ -133,3 +133,24 @@ def apply_red_mask(frame):
     red_mask = red_mask1 | red_mask2
 
     return red_mask
+
+
+def get_roi(frame, region):
+    """Get the region of interest (ROI) for following the line.
+
+    Args:
+        frame (numpy.ndarray): The input frame.
+        region (string): The region of interest.
+
+    Returns:
+        numpy.ndarray: The region of interest for following the line.
+    """
+
+    height, width = frame.shape[:2]
+
+    if region == "top":
+        roi = frame[:int(height * 0.4), :]
+    elif region == "bottom":
+        roi = frame[int(height * 0.4):, :]
+
+    return roi

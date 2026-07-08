@@ -1,4 +1,4 @@
-from .core import image_processing, track_features, track_geometry, utils, webcam
+from .core import image_processing, skeleton, track_features, utils, webcam
 import cv2
 import time
 
@@ -18,7 +18,7 @@ def update(capture):
     if frame is None:
         return
     
-    follow_line_roi = utils.get_roi(frame, "bottom")
+    follow_line_roi = image_processing.get_roi(frame, "bottom")
 
     global last_frame
     
@@ -56,26 +56,26 @@ def update(capture):
     #    )
     #)
 
-    last_frame = frame_black_mask.copy()
+    frame_skeleton = skeleton.get_skeleton(frame_black_mask)
+    
+    last_frame = frame_skeleton.copy()
 
-    line_contours, _ = utils.find_contours(frame_black_mask)
+    line_contours, _ = utils.find_contours(frame_skeleton)
     #green_contours, _ = utils.find_contours(frame_green_mask)
     #red_contours, _ = utils.find_contours(frame_red_mask)
 
-    line_info = utils.get_contour_info(line_contours, frame_center_x, 10000)
-    #green_info = utils.get_contour_info(green_contours, frame_center_x, 3000)
-    #red_info = utils.get_contour_info(red_contours, frame_center_x, 3000)
+    line_info = utils.get_contour_info(line_contours, frame_center_x)
+    #green_info = utils.get_contour_info(green_contours, frame_center_x)
+    #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
-    track_info = track_geometry.get_track_info(frame_black_mask, line_contours, line_info)
+    print(line_info["offset"])
 
-    current_feature = track_features.detect_current_feature(track_info, line_info, frame_black_mask)
-
-    #cv2.imwrite("Frame.jpg", follow_line_roi)
+    current_feature = track_features.detect_current_feature(line_info, frame_skeleton)
 
     return {
         "current_feature": current_feature,
+        "skeletonized_frame": frame_skeleton,
         "line_info": line_info,
         #"green_info": green_info,
         #"red_info": red_info,
-        "track_info": track_info
     }

@@ -15,13 +15,12 @@ def find_contours(frame):
     return frame_contours
 
 
-def get_contour_info(contours, frame_center_x, min_area):
+def get_contour_info(contours, frame_center_x):
     """Get information about the line based on the contours found in the frame.
 
     Args:
         contours (list): A list of contours found in the frame.
         frame_center_x (int): The x-coordinate of the frame's center.
-        min_area (int, optional): The minimum area for a contour to be considered a line. Defaults to 15000.
 
     Returns:
         dict: A dictionary containing information about the detected line.
@@ -30,7 +29,6 @@ def get_contour_info(contours, frame_center_x, min_area):
     contour_info = {
         "found": False,
         "largest_contour": 0,
-        "area": 0,
         "center_x": 0,
         "offset": 0
     }
@@ -40,17 +38,12 @@ def get_contour_info(contours, frame_center_x, min_area):
     
     largest_contour = max(contours, key=cv2.contourArea)
     
-    area = cv2.contourArea(largest_contour)
-    if area < min_area:
-        return contour_info
-    
     moments = cv2.moments(largest_contour)
     if not moments["m00"]:
         return contour_info
     
     contour_info["found"] = True
     contour_info["largest_contour"] = largest_contour
-    contour_info["area"] = area
     contour_info["center_x"] = get_contour_center_x(moments)
     contour_info["offset"] = get_offset(frame_center_x, contour_info["center_x"])
 
@@ -87,27 +80,6 @@ def get_frame_center_x(frame):
     frame_center_x = width // 2
 
     return frame_center_x
-
-
-def get_roi(frame, region):
-    """Get the region of interest (ROI) for following the line.
-
-    Args:
-        frame (numpy.ndarray): The input frame.
-        region (string): The region of interest.
-
-    Returns:
-        numpy.ndarray: The region of interest for following the line.
-    """
-
-    height, width = frame.shape[:2]
-
-    if region == "top":
-        roi = frame[:int(height * 0.4), :]
-    elif region == "bottom":
-        roi = frame[int(height * 0.4):, :]
-
-    return roi
 
 
 def get_offset(setpoint, measured_value):
