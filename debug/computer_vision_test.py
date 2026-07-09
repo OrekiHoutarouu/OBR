@@ -20,6 +20,8 @@ def main():
         try:
             vision_state = vision.update(capture)
 
+            print("Line Topology:", vision_state["line_topology"])
+
         except KeyboardInterrupt:
             print("Stopping execution...")
             

@@ -1,4 +1,5 @@
 from .core import image_processing, skeleton, track_features, utils, webcam
+import numpy as np
 import cv2
 import time
 
@@ -16,12 +17,12 @@ def update(capture):
 
     frame = webcam.get_frame(capture)
     if frame is None:
+        print("No frame captured from webcam.")
         return
     
-    follow_line_roi = image_processing.get_roi(frame, "bottom")
-
     global last_frame
-    
+
+    follow_line_roi = image_processing.get_roi(frame, "bottom")
     frame_center_x = utils.get_frame_center_x(follow_line_roi)
 
     frame_grayscale = image_processing.convert_to_grayscale(follow_line_roi)
@@ -57,7 +58,6 @@ def update(capture):
     #)
 
     frame_skeleton = skeleton.get_skeleton(frame_black_mask)
-    
     last_frame = frame_skeleton.copy()
 
     line_contours, _ = utils.find_contours(frame_skeleton)
@@ -68,13 +68,13 @@ def update(capture):
     #green_info = utils.get_contour_info(green_contours, frame_center_x)
     #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
-    print(line_info["offset"])
-
+    line_topology = skeleton.get_line_topology(frame_skeleton)
     current_feature = track_features.detect_current_feature(line_info, frame_skeleton)
 
     return {
         "current_feature": current_feature,
         "skeletonized_frame": frame_skeleton,
+        "line_topology": line_topology,
         "line_info": line_info,
         #"green_info": green_info,
         #"red_info": red_info,
