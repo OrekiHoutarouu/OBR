@@ -26,6 +26,11 @@ def main():
             print("Stopping execution...")
             
             exit()
+        
+        except:
+            print("An error occurred. Stopping execution...")
+            
+            exit()
 
 if __name__ == "__main__":
     main()
