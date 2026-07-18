@@ -36,14 +36,14 @@ def main():
             
             exit()
         
-        except:
-            print("An error occurred. Stopping execution...")
-            
-            motor_1.stop()
-            motor_2.stop()
-            openrdk.stop()
-            
-            exit()
+#        except:
+#            print("An error occurred. Stopping execution...")
+#            
+#            motor_1.stop()
+#            motor_2.stop()
+#            openrdk.stop()
+#            
+#            exit()
 
 if __name__ == "__main__":
     main()
