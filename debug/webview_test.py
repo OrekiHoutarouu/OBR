@@ -17,9 +17,7 @@ def main():
 
     except KeyboardInterrupt:
         print("Stopping execution...")
-        
-        motor_1.stop()
-        motor_2.stop()
+
         openrdk.stop()
         
         exit()
@@ -27,8 +25,6 @@ def main():
     except:
         print("An error occurred. Stopping execution...")
         
-        motor_1.stop()
-        motor_2.stop()
         openrdk.stop()
         
         exit()
