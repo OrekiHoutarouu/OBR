@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from computer_vision import vision
 from computer_vision.core import webcam
-from computer_vision.debug_server import app, start
+from computer_vision.debug_server import start
 from time import sleep
 
 # Run with "python debug/computer_vision_test.py"
@@ -21,14 +21,16 @@ def main():
             vision_state = vision.update(capture)
 
             print("Line Topology:", vision_state["line_topology"])
+            print("Line offset:", vision_state["line_info"]["offset"])
 
         except KeyboardInterrupt:
-            print("Stopping execution...")
+            print("KeyboardInterrupt received. Stopping execution...")
             
             exit()
         
-        except:
-            print("An error occurred. Stopping execution...")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            print("Stopping execution...")
             
             exit()
 

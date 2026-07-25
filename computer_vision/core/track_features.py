@@ -1,10 +1,41 @@
-def get_green_direction(skeleton_frame, green_mask, line_topology):
-    """Determine the direction of the green line based on the skeletonized frame and the green mask.
+import cv2
+
+def get_green_position(green_info, line_info, min_green_area=3000):
+    """Determine the position of the green marking relative to the detected line.
 
     Args:
-        skeleton_frame (numpy.ndarray): The skeletonized frame.
-        green_mask (numpy.ndarray): The binary mask for the green color.
-        line_topology (dict): A dictionary containing information about the detected line's topology.
+        green_info (dict): A dictionary containing information about the green marking position and orientation.
+        line_info (dict): A dictionary containing information about the detected line's position and orientation.
+        min_green_area (int): The minimum area of the green line to be considered valid.
+
+    Returns:
+        str: A string indicating the position of the green line relative to the detected line.
     """
+
+    green_position = {
+        "left_of_line": False,
+        "right_of_line": False,
+        "ahead_of_line": False,
+        "behind_line": False
+    }
+
+    if not green_info["found"] or not line_info["found"]:
+        return green_position
     
-    pass
+    else:
+        green_area = cv2.contourArea(green_info["largest_contour"])
+        
+        if green_area >= min_green_area:
+            if green_info["center_x"] < line_info["center_x"]:
+                green_position["left_of_line"] = True
+            else:
+                green_position["right_of_line"] = True
+
+            if green_info["center_y"] < line_info["center_y"]:
+                green_position["ahead_of_line"] = True
+            else:
+                green_position["behind_line"] = True
+        else:
+            return
+
+    return green_position

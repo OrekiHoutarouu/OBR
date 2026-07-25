@@ -28,7 +28,7 @@ def main():
             line_follower.update(vision_state, motor_1, motor_2)
 
         except KeyboardInterrupt:
-            print("Stopping execution...")
+            print("KeyboardInterrupt received. Stopping execution...")
             
             motor_1.stop()
             motor_2.stop()
@@ -36,14 +36,15 @@ def main():
             
             exit()
         
-#        except:
-#            print("An error occurred. Stopping execution...")
-#            
-#            motor_1.stop()
-#            motor_2.stop()
-#            openrdk.stop()
-#            
-#            exit()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            print("Stopping execution...")
+            
+            motor_1.stop()
+            motor_2.stop()
+            openrdk.stop()
+            
+            exit()
 
 if __name__ == "__main__":
     main()

@@ -58,9 +58,9 @@ def update(capture):
     #)
 
     frame_skeleton = skeleton.get_skeleton(frame_black_mask)
-    last_frame = frame_skeleton.copy()
+    last_frame = frame_black_mask.copy()
 
-    line_contours, _ = utils.find_contours(frame_skeleton)
+    line_contours, _ = utils.find_contours(frame_black_mask)
     green_contours, _ = utils.find_contours(frame_green_mask)
     #red_contours, _ = utils.find_contours(frame_red_mask)
 
@@ -69,10 +69,10 @@ def update(capture):
     #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
     line_topology = skeleton.get_line_topology(frame_skeleton)
-    green_direction = track_features.get_green_direction(frame_skeleton, frame_green_mask,line_topology)
+    green_position = track_features.get_green_position(green_info, line_info, 3000)
 
     return {
-        "green_direction": green_direction,
+        "green_position": green_position,
         "skeletonized_frame": frame_skeleton,
         "line_topology": line_topology,
         "line_info": line_info,

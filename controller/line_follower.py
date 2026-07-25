@@ -17,8 +17,8 @@ def update(vision_state, left_motor, right_motor):
     left_speed = -(BASE_SPEED - correction)
     right_speed = -(BASE_SPEED + correction)
 
-    left_speed = max(-255, min(255, left_speed))
-    right_speed = max(-255, min(255, right_speed))
+    left_speed = max(-270, min(270, left_speed))
+    right_speed = max(-270, min(270, right_speed))
 
     if vision_state["line_info"]["found"] == True:
         left_motor.move(left_speed)

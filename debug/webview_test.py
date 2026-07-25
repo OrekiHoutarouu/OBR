@@ -16,17 +16,16 @@ def main():
             pass
 
     except KeyboardInterrupt:
+            print("KeyboardInterrupt received. Stopping execution...")
+            
+            openrdk.stop()  
+            exit()
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
         print("Stopping execution...")
 
         openrdk.stop()
-        
-        exit()
-
-    except:
-        print("An error occurred. Stopping execution...")
-        
-        openrdk.stop()
-        
         exit()
         
 

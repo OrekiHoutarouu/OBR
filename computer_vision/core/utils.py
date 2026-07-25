@@ -45,6 +45,7 @@ def get_contour_info(contours, frame_center_x):
     contour_info["found"] = True
     contour_info["largest_contour"] = largest_contour
     contour_info["center_x"] = get_contour_center_x(moments)
+    contour_info["center_y"] = get_contour_center_y(moments)
     contour_info["offset"] = get_offset(frame_center_x, contour_info["center_x"])
 
     return contour_info
@@ -63,6 +64,21 @@ def get_contour_center_x(moments):
     line_center_x = int(moments["m10"] / moments["m00"])
 
     return line_center_x
+
+
+def get_contour_center_y(moments):
+    """Get the y-coordinate of the line's center based on the moments of the contour.
+
+    Args:
+        moments (dict): A dictionary containing the moments of the contour.
+
+    Returns:
+        int: The y-coordinate of the line's center.
+    """
+
+    line_center_y = int(moments["m01"] / moments["m00"])
+
+    return line_center_y
 
 
 def get_frame_center_x(frame):
