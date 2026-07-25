@@ -13,6 +13,7 @@ def get_green_position(green_info, line_info, min_green_area=3000):
     """
 
     green_position = {
+        "is_on_track": False,
         "left_of_line": False,
         "right_of_line": False,
         "ahead_of_line": False,

@@ -1,7 +1,7 @@
 from computer_vision import vision
 from computer_vision.core import webcam
-from computer_vision.debug_server import app, start
-from controller import line_follower
+from computer_vision.debug_server import start
+from controller import line_follower, green_logic
 from openrdk import CommsRuntime
 from time import sleep
 
@@ -26,6 +26,11 @@ def main():
         try:
             vision_state = vision.update(capture)
             line_follower.update(vision_state, motor_1, motor_2)
+
+            if vision_state["green_position"]["is_on_track"]:
+                print(vision_state["green_position"])
+                green_logic.update(vision_state["green_position"], motor_1, motor_2)
+                
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
