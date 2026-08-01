@@ -1,3 +1,4 @@
+import traceback
 from openrdk import CommsRuntime
 from time import sleep
 
@@ -22,7 +23,10 @@ def main():
             exit()
         
     except Exception as e:
-        print(f"An error occurred: {e}")
+        tb = e.__traceback__
+        error_file, error_line, function, text = traceback.extract_tb(tb)[-1]
+
+        print(f"Error {e} occurred in {error_file} at function {function} at line {error_line}: {text}")
         print("Stopping execution...")
 
         openrdk.stop()

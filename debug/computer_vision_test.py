@@ -1,4 +1,5 @@
 from pathlib import Path
+import traceback
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -19,9 +20,9 @@ def main():
     while True:
         try:
             vision_state = vision.update(capture)
-
-            print("Line Topology:", vision_state["line_topology"])
-            print("Line offset:", vision_state["line_info"]["offset"])
+            
+            if vision_state["green_position"]["is_on_track"]:
+                print(vision_state["green_position"])
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
@@ -29,9 +30,11 @@ def main():
             exit()
         
         except Exception as e:
-            print(f"An error occurred: {e}")
+            tb = e.__traceback__
+            error_file, error_line, function, text = traceback.extract_tb(tb)[-1]
+
+            print(f"Error {e} occurred in {error_file} at function {function} at line {error_line}: {text}")
             print("Stopping execution...")
-            
             exit()
 
 if __name__ == "__main__":

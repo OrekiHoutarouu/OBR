@@ -90,8 +90,8 @@ def apply_green_mask(frame):
         numpy.ndarray: The frame with the green mask applied.
     """
 
-    lower_green = numpy.array([50, 100, 100])
-    upper_green = numpy.array([80, 255, 255])
+    lower_green = numpy.array([45, 70, 40])
+    upper_green = numpy.array([85, 255, 255])
 
     frame_green_mask = cv2.inRange(
         frame,

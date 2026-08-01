@@ -50,15 +50,15 @@ def update(capture):
         )
     )
 
-    #frame_red_mask = cv2.bitwise_and(
-    #    frame_red_mask,
-    #    cv2.bitwise_not(
-    #        cv2.bitwise_or(frame_black_mask, frame_green_mask)
-    #    )
-    #)
+    frame_red_mask = cv2.bitwise_and(
+        frame_red_mask,
+        cv2.bitwise_not(
+            cv2.bitwise_or(frame_black_mask, frame_green_mask)
+        )
+    )
 
     frame_skeleton = skeleton.get_skeleton(frame_black_mask)
-    last_frame = frame_black_mask.copy()
+    last_frame = frame_green_mask.copy()
 
     line_contours, _ = utils.find_contours(frame_black_mask)
     green_contours, _ = utils.find_contours(frame_green_mask)
