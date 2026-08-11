@@ -11,7 +11,7 @@ def update(vision_state, left_motor, right_motor):
         right_motor (TractionModule): Right motor object from the OpenRDK library.
     """
 
-    error = vision_state["line_info"]["offset"]
+    error = vision_state["line_info"]["offset_from_frame_center"]
     correction = pid.update(error)
 
     left_speed = -(BASE_SPEED - correction)

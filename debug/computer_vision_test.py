@@ -21,8 +21,7 @@ def main():
         try:
             vision_state = vision.update(capture)
             
-            if vision_state["green_position"]["is_on_track"]:
-                print(vision_state["green_position"])
+            #if vision_state["first_largest_green_position"]["is_on_track"]:
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")

@@ -26,16 +26,9 @@ def get_green_position(green_info, line_info, min_green_area=2000):
     
     else:
         green_position["is_on_track"] = True
-        contour_areas = utils.get_largest_contour_areas(green_info["largest_contours"])
 
-        largest_green_area, second_largest_green_area, third_largest_green_area, fourth_largest_green_area = contour_areas
 
-        print(f"Largest green area: {largest_green_area}")
-        print(f"Second largest green area: {second_largest_green_area}")
-        print(f"Third largest green area: {third_largest_green_area}")
-        print(f"Fourth largest green area: {fourth_largest_green_area}")
-
-        if largest_green_area >= min_green_area:
+        if green_info["area"] >= min_green_area:
             if green_info["center_x"] < line_info["center_x"]:
                 green_position["left_of_line"] = True
             else:
@@ -47,5 +40,8 @@ def get_green_position(green_info, line_info, min_green_area=2000):
                 green_position["behind_line"] = True
         else:
             return green_position
+
+        print(f"Green marking found with area: {green_info['area']}")
+        print(f"Green marking position: {green_position}")
 
     return green_position

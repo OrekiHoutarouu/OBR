@@ -10,16 +10,33 @@ def find_contours(frame):
         list: A list of contours found in the frame.
     """
 
-    frame_contours = cv2.findContours(frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    frame_contours, _ = cv2.findContours(frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     return frame_contours
 
 
-def get_contour_info(contours, frame_center_x):
-    """Get information about the line based on the contours found in the frame.
+def get_four_largest_contours(contours):
+    """Get the four largest contours from the list of contours.
 
     Args:
         contours (list): A list of contours found in the frame.
+
+    Returns:
+        list: A list containing the four largest contours.
+    """
+
+    largest_contours = sorted(contours, key=cv2.contourArea, reverse=True)[:4]
+
+    largest_contours += [0] * (4 - len(largest_contours))
+
+    return largest_contours
+
+
+def get_contour_info(contours, frame_center_x):
+    """Get information about the line based on one or more contours.
+
+    Args:
+        contours (list or numpy.ndarray): A list of contours, a single contour, or None.
         frame_center_x (int): The x-coordinate of the frame's center.
 
     Returns:
@@ -28,57 +45,38 @@ def get_contour_info(contours, frame_center_x):
 
     contour_info = {
         "found": False,
-        "largest_contours": 0,
         "center_x": 0,
         "center_y": 0,
-        "offset": 0
+        "area": 0,
+        "offset_from_frame_center": 0
     }
 
-    if not contours:
+    if contours is None:
         return contour_info
+
+    if isinstance(contours, (list, tuple)):
+        contour_list = [c for c in contours if c is not None and hasattr(c, "shape")]
+    elif hasattr(contours, "shape"):
+        contour_list = [contours]
+    else:
+        return contour_info
+
+    if not contour_list:
+        return contour_info
+
+    largest_contour = max(contour_list, key=cv2.contourArea)
     
-    largest_contours = sorted(contours, key=cv2.contourArea, reverse=True)[:4]
-    
-    moments = cv2.moments(largest_contours[0])
+    moments = cv2.moments(largest_contour)
     if not moments["m00"]:
         return contour_info
     
     contour_info["found"] = True
-    contour_info["largest_contours"] = largest_contours
     contour_info["center_x"] = get_contour_center_x(moments)
     contour_info["center_y"] = get_contour_center_y(moments)
-    contour_info["offset"] = get_offset(frame_center_x, contour_info["center_x"])
+    contour_info["area"] = cv2.contourArea(largest_contour)
+    contour_info["offset_from_frame_center"] = get_offset(frame_center_x, contour_info["center_x"])
 
     return contour_info
-
-
-def get_largest_contour_areas(contours):
-    largest_green_area = (
-        cv2.contourArea(contours[0])
-        if len(contours) > 0
-        and contours[0] is not None
-        else 0
-    )
-    second_largest_green_area = (
-        cv2.contourArea(contours[1])
-        if len(contours) > 1
-        and contours[1] is not None
-        else 0
-    )
-    third_largest_green_area = (
-        cv2.contourArea(contours[2])
-        if len(contours) > 2
-        and contours[2] is not None
-        else 0
-    )
-    fourth_largest_green_area = (
-        cv2.contourArea(contours[3])
-        if len(contours) > 3
-        and contours[3] is not None
-        else 0
-    )
-
-    return largest_green_area, second_largest_green_area, third_largest_green_area, fourth_largest_green_area
 
 
 def get_contour_center_x(moments):

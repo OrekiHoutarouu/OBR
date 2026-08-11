@@ -1,34 +1,5 @@
 import cv2, numpy
 
-def convert_to_grayscale(frame):
-    """Sets the frame to gray scale.
-
-    Args:
-        frame (numpy.ndarray): The input frame.
-
-    Returns:
-        numpy.ndarray: The frame in gray scale.
-    """
-
-    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    return frame_gray
-
-
-def convert_to_hsv(frame):
-    """Sets the frame to HSV scale.
-
-    Args:
-        frame (numpy.ndarray): The input frame.
-
-    Returns:
-        numpy.ndarray: The frame in HSV scale.
-    """
-
-    frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    return frame_hsv
-
 
 def get_hsv_clahe(frame):
     """Applies CLAHE to the HSV frame.
@@ -48,21 +19,6 @@ def get_hsv_clahe(frame):
     frame_hsv_clahe = cv2.merge((h, s, v_clahe))
 
     return frame_hsv_clahe
-
-
-def blur_frame(frame):
-    """Blurs the frame.
-
-    Args:
-        frame (numpy.ndarray): The input frame.
-
-    Returns:
-        numpy.ndarray: The blurred frame.
-    """
-
-    frame_blur = cv2.GaussianBlur(frame, (5, 5), 0)
-
-    return frame_blur
 
 
 def apply_black_mask(frame):

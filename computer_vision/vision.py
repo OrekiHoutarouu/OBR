@@ -25,12 +25,12 @@ def update(capture):
     follow_line_roi = image_processing.get_roi(frame, "bottom")
     frame_center_x = utils.get_frame_center_x(follow_line_roi)
 
-    frame_grayscale = image_processing.convert_to_grayscale(follow_line_roi)
-    frame_hsv = image_processing.convert_to_hsv(follow_line_roi)
+    frame_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
+    frame_hsv = frame_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
     frame_hsv_clahe = image_processing.get_hsv_clahe(frame_hsv)
 
-    frame_grayscale_blur = image_processing.blur_frame(frame_grayscale)
-    frame_hsv_clahe_blur = image_processing.blur_frame(frame_hsv_clahe)
+    frame_grayscale_blur = cv2.GaussianBlur(frame_grayscale, (5, 5), 0)
+    frame_hsv_clahe_blur = cv2.GaussianBlur(frame_hsv_clahe, (5, 5), 0)
 
     _, frame_black_mask = image_processing.apply_black_mask(frame_grayscale_blur)
     frame_green_mask = image_processing.apply_green_mask(frame_hsv_clahe_blur)
@@ -60,22 +60,38 @@ def update(capture):
     frame_skeleton = skeleton.get_skeleton(frame_black_mask)
     last_frame = frame_green_mask.copy()
 
-    line_contours, _ = utils.find_contours(frame_black_mask)
-    green_contours, _ = utils.find_contours(frame_green_mask)
+    line_contours = utils.find_contours(frame_black_mask)
+    green_contours = utils.find_contours(frame_green_mask)
     #red_contours, _ = utils.find_contours(frame_red_mask)
 
+    largest_green_contours = utils.get_four_largest_contours(green_contours)
+
+    first_largest_green_contour_info = utils.get_contour_info(largest_green_contours[0], frame_center_x)
+    second_largest_green_contour_info = utils.get_contour_info(largest_green_contours[1], frame_center_x)
+    third_largest_green_contour_info = utils.get_contour_info(largest_green_contours[2], frame_center_x)
+    fourth_largest_green_contour_info = utils.get_contour_info(largest_green_contours[3], frame_center_x)
+
     line_info = utils.get_contour_info(line_contours, frame_center_x)
-    green_info = utils.get_contour_info(green_contours, frame_center_x)
     #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
     line_topology = skeleton.get_line_topology(frame_skeleton)
-    green_position = track_features.get_green_position(green_info, line_info, 3000)
+    
+    first_largest_green_position = track_features.get_green_position(first_largest_green_contour_info, line_info)
+    second_largest_green_position = track_features.get_green_position(second_largest_green_contour_info, line_info)
+    third_largest_green_position = track_features.get_green_position(third_largest_green_contour_info, line_info)
+    fourth_largest_green_position = track_features.get_green_position(fourth_largest_green_contour_info, line_info)
 
     return {
-        "green_position": green_position,
         "skeletonized_frame": frame_skeleton,
         "line_topology": line_topology,
         "line_info": line_info,
-        "green_info": green_info,
+        "first_largest_green_contour_info": first_largest_green_contour_info,
+        "second_largest_green_contour_info": second_largest_green_contour_info,
+        "third_largest_green_contour_info": third_largest_green_contour_info,
+        "fourth_largest_green_contour_info": fourth_largest_green_contour_info,
+        "first_largest_green_position": first_largest_green_position,
+        "second_largest_green_position": second_largest_green_position,
+        "third_largest_green_position": third_largest_green_position,
+        "fourth_largest_green_position": fourth_largest_green_position,
         #"red_info": red_info,
     }
