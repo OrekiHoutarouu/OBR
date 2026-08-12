@@ -1,7 +1,7 @@
 import traceback
 from computer_vision import vision
 from computer_vision.core import webcam
-from computer_vision.debug_server import start
+from debug.debug_server import start
 from controller import line_follower, green_logic
 from openrdk import CommsRuntime
 from time import sleep

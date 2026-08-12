@@ -1,4 +1,5 @@
 from pathlib import Path
+from time import sleep
 import traceback
 import sys
 
@@ -6,10 +7,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from computer_vision import vision
 from computer_vision.core import webcam
-from computer_vision.debug_server import start
+from debug.debug_server import start
+from computer_vision.core.track_features import get_green_dispersion
 from time import sleep
 
-# Run with "python debug/computer_vision_test.py"
+# Run with "python tests/computer_vision_test.py"
 # View webcam at "http://localhost:5000/video"
 
 def main():
@@ -21,7 +23,13 @@ def main():
         try:
             vision_state = vision.update(capture)
             
-            #if vision_state["first_largest_green_position"]["is_on_track"]:
+            if vision_state["first_largest_green_position"]["is_on_track"]:
+                green_dispersion = get_green_dispersion(vision_state["first_largest_green_position"], 
+                                                        vision_state["second_largest_green_position"],
+                                                        vision_state["third_largest_green_position"],
+                                                        vision_state["fourth_largest_green_position"])
+
+                print(f"Green dispersion: {green_dispersion}")
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")

@@ -1,7 +1,7 @@
 import cv2
 from computer_vision.core import utils
 
-def get_green_position(green_info, line_info, min_green_area=2000):
+def get_green_position(green_info, line_info, min_green_area=8000):
     """Determine the position of the green marking relative to the detected line.
 
     Args:
@@ -27,7 +27,6 @@ def get_green_position(green_info, line_info, min_green_area=2000):
     else:
         green_position["is_on_track"] = True
 
-
         if green_info["area"] >= min_green_area:
             if green_info["center_x"] < line_info["center_x"]:
                 green_position["left_of_line"] = True
@@ -41,7 +40,45 @@ def get_green_position(green_info, line_info, min_green_area=2000):
         else:
             return green_position
 
-        print(f"Green marking found with area: {green_info['area']}")
-        print(f"Green marking position: {green_position}")
-
     return green_position
+
+
+def get_green_dispersion(first_largest_green_position, second_largest_green_position, third_largest_green_position, fourth_largest_green_position):
+    """Calculate the dispersion of the green markings based on their positions.
+
+    Args:
+        first_largest_green_position (dict): Information about the first largest green marking.
+        second_largest_green_position (dict): Information about the second largest green marking.
+        third_largest_green_position (dict): Information about the third largest green marking.
+        fourth_largest_green_position (dict): Information about the fourth largest green marking.
+
+    Returns:
+        float: The calculated dispersion of the green markings.
+    """  
+
+    dispersion = {
+        "top_left": False,
+        "top_right": False,
+        "bottom_left": False,
+        "bottom_right": False
+    }
+
+    if not first_largest_green_position["is_on_track"]:
+        return dispersion
+
+    for position in [first_largest_green_position, 
+                    second_largest_green_position, 
+                    third_largest_green_position, 
+                    fourth_largest_green_position]:
+        
+        if position["is_on_track"]:
+            if position["left_of_line"] and position["ahead_of_line"]:
+                dispersion["top_left"] = True
+            elif position["right_of_line"] and position["ahead_of_line"]:
+                dispersion["top_right"] = True
+            elif position["left_of_line"] and position["behind_line"]:
+                dispersion["bottom_left"] = True
+            elif position["right_of_line"] and position["behind_line"]:
+                dispersion["bottom_right"] = True
+
+    return dispersion

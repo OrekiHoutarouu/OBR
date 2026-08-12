@@ -1,9 +1,11 @@
 from .core import image_processing, skeleton, track_features, utils, webcam
+from debug.debug_server import draw_debug_frame
 import numpy as np
 import cv2
 import time
 
 last_frame = None
+last_frame_time = time.time()
 
 def update(capture):
     """Update the vision state based on the current frame from the webcam.
@@ -21,8 +23,14 @@ def update(capture):
         return
     
     global last_frame
+    global last_frame_time
+
+    current_time = time.time()
+    fps = 1 / (current_time - last_frame_time)
+    last_frame_time = current_time
 
     follow_line_roi = image_processing.get_roi(frame, "bottom")
+    roi_offset_y = int(frame.shape[0] * 0.4)
     frame_center_x = utils.get_frame_center_x(follow_line_roi)
 
     frame_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
@@ -58,7 +66,6 @@ def update(capture):
     )
 
     frame_skeleton = skeleton.get_skeleton(frame_black_mask)
-    last_frame = frame_green_mask.copy()
 
     line_contours = utils.find_contours(frame_black_mask)
     green_contours = utils.find_contours(frame_green_mask)
@@ -75,6 +82,8 @@ def update(capture):
     #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
     line_topology = skeleton.get_line_topology(frame_skeleton)
+    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, fps, roi_offset_y)
+    last_frame = debug_frame
     
     first_largest_green_position = track_features.get_green_position(first_largest_green_contour_info, line_info)
     second_largest_green_position = track_features.get_green_position(second_largest_green_contour_info, line_info)
