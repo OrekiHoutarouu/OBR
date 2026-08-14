@@ -158,14 +158,4 @@ def draw_debug_frame(frame, line_contour, line_info, green_contours, fps, roi_of
                 2
             )
 
-    cv2.putText(
-        debug_frame,
-        f"FPS: {fps:.1f}",
-        (10, 30),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.8,
-        (255, 255, 255),
-        2
-    )
-
     return debug_frame

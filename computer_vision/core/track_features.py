@@ -1,7 +1,7 @@
 import cv2
 from computer_vision.core import utils
 
-def get_green_position(green_info, line_info, min_green_area=7000):
+def get_green_position(green_info, line_info, min_green_area=5000):
     """Determine the position of the green marking relative to the detected line.
 
     Args:

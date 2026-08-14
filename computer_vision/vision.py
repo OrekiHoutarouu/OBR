@@ -30,6 +30,7 @@ def update(capture):
 
     current_time = time.time()
     fps = 1 / (current_time - last_frame_time)
+    fps = round(fps)
     last_frame_time = current_time
 
     follow_line_roi = image_processing.get_roi(frame, "bottom")
@@ -100,6 +101,7 @@ def update(capture):
     last_frame = debug_frame
 
     state = {
+        "fps": fps,
         "current_feature": "Working on it",
         "line_info": line_info,
         "line_topology": line_topology,
