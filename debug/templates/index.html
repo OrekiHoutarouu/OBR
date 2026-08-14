@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>Debug page</title>
+</head>
+
+<body>
+    <header>
+        <span>Computer vision debug</span>
+    </header>
+
+    <main>
+        <section class="camera-card">
+
+            <div class="card-header">
+                <h2>Camera</h2>
+                <div class="status">
+                    <span class="status-dot"></span>
+                    ONLINE
+                </div>
+            </div>
+
+            <div class="video-container">
+                <img src="{{ url_for('video') }}" alt="Camera feed">
+            </div>
+
+        </section>
+
+        <aside class="telemetry">
+    
+            <div class="telemetry-header">
+                <h2>Telemetry</h2>
+            </div>
+    
+            <div class="telemetry-section">
+    
+                <span class="label">CURRENT FEATURE</span>
+    
+                <span id="feature" class="feature-value">UNKNOWN</span>
+    
+            </div>
+    
+            <div class="telemetry-section">
+    
+                <span class="label">LINE</span>
+    
+                <div class="data-row">
+                    <span>Offset</span>
+                    <strong id="offset">0</strong>
+                </div>
+    
+                <div class="data-row">
+                    <span>Center X</span>
+                    <strong id="center-x">0</strong>
+                </div>
+    
+                <div class="data-row">
+                    <span>Center Y</span>
+                    <strong id="center-y">0</strong>
+                </div>
+    
+            </div>
+    
+            <div class="telemetry-section">
+    
+                <span class="label">LINE TOPOLOGY</span>
+    
+                <div class="data-row">
+                    <span>Endpoints</span>
+                    <strong id="endpoints">0</strong>
+                </div>
+    
+                <div class="data-row">
+                    <span>Junctions</span>
+                    <strong id="junctions">0</strong>
+                </div>
+    
+            </div>
+
+            <div class="telemetry-section">
+
+                <span class="label">GREEN DISPERSION</span>
+    
+                <div class="data-row">
+                    <span>Top left</span>
+                    <strong id="top-left">NOT FOUND</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Top right</span>
+                    <strong id="top-right">NOT FOUND</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Bottom left</span>
+                    <strong id="bottom-left">NOT FOUND</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Bottom right</span>
+                    <strong id="bottom-right">NOT FOUND</strong>
+                </div>
+
+            </div>
+        </aside>
+    </main>
+
+    <script>
+
+        async function updateTelemetry() {
+            try {
+                const response = await fetch("/telemetry");
+                const data = await response.json();
+
+                document.getElementById("feature").textContent =
+                    data.current_feature;
+
+                document.getElementById("offset").textContent =
+                    data.line_info.offset_from_frame_center;
+
+                document.getElementById("center-x").textContent =
+                    data.line_info.center_x;
+
+                document.getElementById("center-y").textContent =
+                    data.line_info.center_y;
+
+                document.getElementById("endpoints").textContent =
+                    data.line_topology.endpoints;
+
+                document.getElementById("junctions").textContent =
+                    data.line_topology.junctions;
+                
+                document.getElementById("top-left").textContent =
+                    data.green_dispersion.top_left;
+
+                document.getElementById("top-right").textContent =
+                    data.green_dispersion.top_right;
+
+                document.getElementById("bottom-left").textContent =
+                    data.green_dispersion.bottom_left;
+
+                document.getElementById("bottom-right").textContent =
+                    data.green_dispersion.bottom_right;
+            }
+
+            catch (error) {
+                console.error("Telemetry error:", error);
+            }
+        }
+
+        setInterval(updateTelemetry, 100);
+
+        updateTelemetry();
+
+    </script>
+</body>
+</html>

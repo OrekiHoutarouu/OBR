@@ -2,8 +2,8 @@ import traceback
 from computer_vision import vision
 from computer_vision.core import webcam
 from debug.debug_server import start
-from controller import line_follower, green_logic
-from openrdk import CommsRuntime
+from controller import line_follower
+from open_rdk import CommsRuntime
 from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
@@ -27,11 +27,7 @@ def main():
         try:
             vision_state = vision.update(capture)
             line_follower.update(vision_state, motor_1, motor_2)
-
-            if vision_state["green_position"]["is_on_track"]:
-                green_logic.update(vision_state["green_position"], motor_1, motor_2)
                 
-
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
             
@@ -53,6 +49,7 @@ def main():
             openrdk.stop()
             
             exit()
+
 
 if __name__ == "__main__":
     main()

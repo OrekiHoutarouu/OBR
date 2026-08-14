@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, render_template, jsonify
 from computer_vision import vision
 from threading import Thread
 import numpy as np
@@ -26,6 +26,15 @@ def generate():
             + b"\r\n"
         )
 
+@app.route("/")
+def index():
+    """Generate the index page for the Flask application.
+
+    Returns:
+        render_template: The rendered index page.
+    """
+
+    return render_template("index.html")
 
 @app.route("/video")
 def video():
@@ -39,6 +48,17 @@ def video():
         generate(),
         mimetype="multipart/x-mixed-replace; boundary=frame"
     )
+
+
+@app.route("/telemetry")
+def telemetry():
+    """Generate telemetry data from the last vision state in the vision module.
+
+    Returns:
+        jsonify: The JSON response containing the telemetry data.
+    """
+
+    return jsonify(vision.last_state)
 
 
 def start():
@@ -81,6 +101,16 @@ def draw_debug_frame(frame, line_contour, line_info, green_contours, fps, roi_of
     debug_frame = frame.copy()
 
     def _offset_contour(contour, dy):
+        """Offset a contour by a vertical distance.
+
+        Args:
+            contour (_type_): The contour to offset.
+            dy (_type_): The vertical distance to offset by.
+
+        Returns:
+            _type_: The offset contour.
+        """
+
         offset = np.array([[[0, dy]]], dtype=contour.dtype)
         return contour + offset
 

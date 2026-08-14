@@ -6,6 +6,7 @@ import time
 
 last_frame = None
 last_frame_time = time.time()
+last_state = {}
 
 def update(capture):
     """Update the vision state based on the current frame from the webcam.
@@ -24,6 +25,8 @@ def update(capture):
     
     global last_frame
     global last_frame_time
+    global last_state
+
 
     current_time = time.time()
     fps = 1 / (current_time - last_frame_time)
@@ -82,25 +85,26 @@ def update(capture):
     #red_info = utils.get_contour_info(red_contours, frame_center_x)
 
     line_topology = skeleton.get_line_topology(frame_skeleton)
-    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, fps, roi_offset_y)
-    last_frame = debug_frame
     
     first_largest_green_position = track_features.get_green_position(first_largest_green_contour_info, line_info)
     second_largest_green_position = track_features.get_green_position(second_largest_green_contour_info, line_info)
     third_largest_green_position = track_features.get_green_position(third_largest_green_contour_info, line_info)
     fourth_largest_green_position = track_features.get_green_position(fourth_largest_green_contour_info, line_info)
+    
+    green_dispersion = track_features.get_green_dispersion(first_largest_green_position, 
+                                                            second_largest_green_position,
+                                                            third_largest_green_position,
+                                                            fourth_largest_green_position)
 
-    return {
-        "skeletonized_frame": frame_skeleton,
-        "line_topology": line_topology,
+    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, fps, roi_offset_y)
+    last_frame = debug_frame
+
+    state = {
+        "current_feature": "Working on it",
         "line_info": line_info,
-        "first_largest_green_contour_info": first_largest_green_contour_info,
-        "second_largest_green_contour_info": second_largest_green_contour_info,
-        "third_largest_green_contour_info": third_largest_green_contour_info,
-        "fourth_largest_green_contour_info": fourth_largest_green_contour_info,
-        "first_largest_green_position": first_largest_green_position,
-        "second_largest_green_position": second_largest_green_position,
-        "third_largest_green_position": third_largest_green_position,
-        "fourth_largest_green_position": fourth_largest_green_position,
-        #"red_info": red_info,
+        "line_topology": line_topology,
+        "green_dispersion": green_dispersion
     }
+    last_state = state
+
+    return line_info, 

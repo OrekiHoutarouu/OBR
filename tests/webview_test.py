@@ -1,5 +1,5 @@
 import traceback
-from openrdk import CommsRuntime
+from open_rdk import CommsRuntime
 from time import sleep
 
 # Run with "python debug/webview_test.py"
