@@ -1,3 +1,3 @@
 # OBR
 
-RoboVante's team repository for the Olimpíada Brasileira de Robótica (Brazilian Robotics Olympiad) 
+RoboVante team's repository for the Olimpíada Brasileira de Robótica (Brazilian Robotics Olympiad) 
