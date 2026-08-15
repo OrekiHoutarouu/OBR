@@ -23,6 +23,8 @@ def update(capture):
         print("No frame captured from webcam.")
         return
     
+    start = time.perf_counter()
+    
     global last_frame
     global last_frame_time
     global last_debug_info
@@ -35,6 +37,7 @@ def update(capture):
     follow_line_roi = image_processing.get_roi(frame, "bottom")
     roi_offset_y = int(frame.shape[0] * 0.4)
     frame_center_x = utils.get_frame_center_x(follow_line_roi)
+    webcam_resolution = f"{frame.shape[1]}x{frame.shape[0]}"
 
     frame_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
     frame_hsv = frame_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
@@ -68,10 +71,10 @@ def update(capture):
         )
     )
 
-    line_touches_left = np.any(frame_black_mask[:, 0] > 0)
-    line_touches_right = np.any(frame_black_mask[:, -1] > 0)
-
-    frame_skeleton = skeleton.get_skeleton(frame_black_mask)
+    line_touches_left = bool(np.any(frame_black_mask[:, 0] > 0))
+    line_touches_right = bool(np.any(frame_black_mask[:, -1] > 0))
+    line_touches_top = bool(np.any(frame_black_mask[0, :] > 0))
+    line_touches_bottom = bool(np.any(frame_black_mask[-1, :] > 0))
 
     line_contours = contours.find_contours(frame_black_mask)
     green_contours = contours.find_contours(frame_green_mask)
@@ -86,8 +89,6 @@ def update(capture):
 
     line_info = contours.get_contour_info(line_contours, frame_center_x)
     #red_info = contours.get_contour_info(red_contours, frame_center_x)
-
-    line_topology = skeleton.get_line_topology(frame_skeleton)
     
     first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
     second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
@@ -103,11 +104,16 @@ def update(capture):
     last_frame = debug_frame
 
     debug_info = {
+        "current_feature": "Working on it",
         "fps": fps,
-        "current_state": "Working on it",
+        "webcam_resolution": webcam_resolution,
+        "latency": round((time.perf_counter() - start) * 1000, 2),
         "line_info": line_info,
-        "line_topology": line_topology,
-        "green_dispersion": green_dispersion
+        "green_dispersion": green_dispersion,
+        "line_touches_left": line_touches_left,
+        "line_touches_right": line_touches_right,
+        "line_touches_top": line_touches_top,
+        "line_touches_bottom": line_touches_bottom
     }
     last_debug_info = debug_info
 

@@ -23,27 +23,19 @@
                     ONLINE
                 </div>
             </div>
-
+            
             <div class="video-container">
                 <img src="{{ url_for('video') }}" alt="Camera feed">
             </div>
-
+            
         </section>
-
+        
         <aside class="telemetry">
-    
+            
             <div class="telemetry-header">
                 <h2>Telemetry</h2>
             </div>
 
-            <div class="telemetry-section">
-    
-                <span class="label">WEBCAM FPS</span>
-    
-                <span id="fps" class="feature-value">0</span>
-    
-            </div>
-    
             <div class="telemetry-section">
     
                 <span class="label">CURRENT TRACK FEATURE</span>
@@ -51,23 +43,26 @@
                 <span id="feature" class="feature-value">UNKNOWN</span>
     
             </div>
-    
-            
+
             <div class="telemetry-section">
                 
-                <span class="label">TRACK TOPOLOGY</span>
+                <span class="label">WEBCAM</span>
                 
                 <div class="data-row">
-                    <span>Endpoints</span>
-                    <strong id="endpoints">0</strong>
+                    <span>Resolution</span>
+                    <strong id="resolution">0</strong>
                 </div>
-                
+
+                <div class="data-row">
+                    <span>Latency</span>
+                    <strong id="latency">0</strong>
+                </div>
                 
                 <div class="data-row">
-                    <span>Junctions</span>
-                    <strong id="junctions">0</strong>
+                    <span>FPS</span>
+                    <strong id="fps">0</strong>
                 </div>
-                
+
             </div>
 
             <div class="telemetry-section">
@@ -92,6 +87,26 @@
                 <div class="data-row">
                     <span>Area</span>
                     <strong id="area">0</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Touches Left Edge</span>
+                    <strong id="touches-left">0</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Touches Right Edge</span>
+                    <strong id="touches-right">0</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Touches Top Edge</span>
+                    <strong id="touches-top">0</strong>
+                </div>
+
+                <div class="data-row">
+                    <span>Touches Bottom Edge</span>
+                    <strong id="touches-bottom">0</strong>
                 </div>
     
             </div>
@@ -123,37 +138,49 @@
             </div>
         </aside>
     </main>
-
+    
     <script>
-
+        
         async function updateTelemetry() {
             try {
                 const response = await fetch("/telemetry");
                 const data = await response.json();
 
-                document.getElementById("fps").textContent =
-                    data.fps;
-
                 document.getElementById("feature").textContent =
                     data.current_feature;
 
+                document.getElementById("resolution").textContent =
+                    data.webcam_resolution;
+
+                document.getElementById("latency").textContent =
+                    data.latency + " ms";
+
+                document.getElementById("fps").textContent =
+                    data.fps;
+
                 document.getElementById("offset").textContent =
-                    data.line_info.offset_from_frame_center;
+                    data.line_info.offset_from_frame_center + " px";
 
                 document.getElementById("center-x").textContent =
-                    data.line_info.center_x;
+                    data.line_info.center_x + " px";
 
                 document.getElementById("center-y").textContent =
-                    data.line_info.center_y;
+                    data.line_info.center_y + " px";
 
                 document.getElementById("area").textContent =
-                    data.line_info.area;
+                    data.line_info.area + " px²";
 
-                document.getElementById("endpoints").textContent =
-                    data.line_topology.endpoints;
+                document.getElementById("touches-left").textContent =
+                    data.line_touches_left;
 
-                document.getElementById("junctions").textContent =
-                    data.line_topology.junctions;
+                document.getElementById("touches-right").textContent =
+                    data.line_touches_right;
+
+                document.getElementById("touches-top").textContent =
+                    data.line_touches_top;
+
+                document.getElementById("touches-bottom").textContent =
+                    data.line_touches_bottom;
                 
                 document.getElementById("top-left").textContent =
                     data.green_dispersion.top_left;
