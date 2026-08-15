@@ -58,7 +58,7 @@ def telemetry():
         jsonify: The JSON response containing the telemetry data.
     """
 
-    return jsonify(vision.last_state)
+    return jsonify(vision.last_debug_info)
 
 
 def start():

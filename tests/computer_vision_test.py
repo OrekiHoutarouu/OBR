@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from computer_vision import vision
 from computer_vision.core import webcam
+from controller import green_logic
 from debug.debug_server import start
 
 # Run with "python tests/computer_vision_test.py"
@@ -18,7 +19,7 @@ def main():
 
     while True:
         try:
-            vision_state = vision.update(capture)
+            vision_info = vision.update(capture)
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")

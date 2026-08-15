@@ -1,26 +1,27 @@
 from .core import pid
 
 BASE_SPEED = 20
+MAX_SPEED = 100
 
-def update(vision_state, left_motor, right_motor):
-    """Updates the motor speeds based on the vision state using a PID controller.
+def update(vision_info, left_motor, right_motor):
+    """Updates the motor speeds based on the vision info using a PID controller.
 
     Args:
-        vision_state (dict): The current state of the vision system, including line information and detected features.
+        vision_info (dict): The current info of the vision system, including line information and detected features.
         left_motor (TractionModule): Left motor object from the OpenRDK library.
         right_motor (TractionModule): Right motor object from the OpenRDK library.
     """
 
-    error = vision_state["line_info"]["offset_from_frame_center"]
+    error = vision_info["line_info"]["offset_from_frame_center"]
     correction = pid.update(error)
 
     left_speed = -(BASE_SPEED - correction)
     right_speed = -(BASE_SPEED + correction)
 
-    left_speed = max(-100, min(100, left_speed))
-    right_speed = max(-100, min(100, right_speed))
+    left_speed = max(-MAX_SPEED, min(MAX_SPEED, left_speed))
+    right_speed = max(-MAX_SPEED, min(MAX_SPEED, right_speed))
 
-    if vision_state["line_info"]["found"] == True:
+    if vision_info["line_info"]["found"] == True:
         left_motor.move(left_speed)
         right_motor.move(-right_speed)
 
