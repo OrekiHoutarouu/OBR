@@ -39,35 +39,38 @@ def update(capture):
     frame_center_x = utils.get_frame_center_x(follow_line_roi)
     webcam_resolution = f"{frame.shape[1]}x{frame.shape[0]}"
 
-    frame_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
-    frame_hsv = frame_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
-    frame_hsv_clahe = image_processing.get_hsv_clahe(frame_hsv)
+    frame_grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    roi_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
+    roi_hsv = roi_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
+    roi_hsv_clahe = image_processing.get_hsv_clahe(roi_hsv)
 
     frame_grayscale_blur = cv2.GaussianBlur(frame_grayscale, (5, 5), 0)
-    frame_hsv_clahe_blur = cv2.GaussianBlur(frame_hsv_clahe, (5, 5), 0)
+    roi_grayscale_blur = cv2.GaussianBlur(roi_grayscale, (5, 5), 0)
+    roi_hsv_clahe_blur = cv2.GaussianBlur(roi_hsv_clahe, (5, 5), 0)
 
     _, frame_black_mask = image_processing.apply_black_mask(frame_grayscale_blur)
-    frame_green_mask = image_processing.apply_green_mask(frame_hsv_clahe_blur)
-    frame_red_mask = image_processing.apply_red_mask(frame_hsv_clahe_blur)
+    _, roi_black_mask = image_processing.apply_black_mask(roi_grayscale_blur)
+    roi_green_mask = image_processing.apply_green_mask(roi_hsv_clahe_blur)
+    roi_red_mask = image_processing.apply_red_mask(roi_hsv_clahe_blur)
 
-    frame_black_mask = cv2.bitwise_and(
-        frame_black_mask,
+    roi_black_mask = cv2.bitwise_and(
+        roi_black_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(frame_green_mask, frame_red_mask)
+            cv2.bitwise_or(roi_green_mask, roi_red_mask)
         )
     )
 
-    frame_green_mask = cv2.bitwise_and(
-        frame_green_mask,
+    roi_green_mask = cv2.bitwise_and(
+        roi_green_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(frame_black_mask, frame_red_mask)
+            cv2.bitwise_or(roi_black_mask, roi_red_mask)
         )
     )
 
-    frame_red_mask = cv2.bitwise_and(
-        frame_red_mask,
+    roi_red_mask = cv2.bitwise_and(
+        roi_red_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(frame_black_mask, frame_green_mask)
+            cv2.bitwise_or(roi_black_mask, roi_green_mask)
         )
     )
 
@@ -76,9 +79,9 @@ def update(capture):
     line_touches_top = bool(np.any(frame_black_mask[0, :] > 0))
     line_touches_bottom = bool(np.any(frame_black_mask[-1, :] > 0))
 
-    line_contours = contours.find_contours(frame_black_mask)
-    green_contours = contours.find_contours(frame_green_mask)
-    #red_contours, _ = contours.find_contours(frame_red_mask)
+    line_contours = contours.find_contours(roi_black_mask)
+    green_contours = contours.find_contours(roi_green_mask)
+    #red_contours, _ = contours.find_contours(roi_red_mask)
 
     largest_green_contours = contours.get_four_largest_contours(green_contours)
 
@@ -90,10 +93,10 @@ def update(capture):
     line_info = contours.get_contour_info(line_contours, frame_center_x)
     #red_info = contours.get_contour_info(red_contours, frame_center_x)
     
-    first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
-    second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
-    third_largest_green_position = green_marking.get_green_position(third_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
-    fourth_largest_green_position = green_marking.get_green_position(fourth_largest_green_contour_info, line_info, line_touches_left, line_touches_right)
+    first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
+    second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
+    third_largest_green_position = green_marking.get_green_position(third_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
+    fourth_largest_green_position = green_marking.get_green_position(fourth_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
 
     green_dispersion = green_marking.get_green_dispersion(first_largest_green_position, 
                                                             second_largest_green_position,

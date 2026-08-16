@@ -1,7 +1,7 @@
 import cv2
 from computer_vision.core import utils
 
-def get_green_position(green_info, line_info, line_touches_left, line_touches_right, min_green_area=5000):
+def get_green_position(green_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom, min_green_area=5000):
     """Determine the position of the green marking relative to the detected line.
 
     Args:
@@ -9,6 +9,8 @@ def get_green_position(green_info, line_info, line_touches_left, line_touches_ri
         line_info (dict): A dictionary containing information about the detected line's position and orientation.
         line_touches_left (bool): Whether the line touches the left edge of the frame.
         line_touches_right (bool): Whether the line touches the right edge of the frame.
+        line_touches_top (bool): Whether the line touches the top edge of the frame.
+        line_touches_bottom (bool): Whether the line touches the bottom edge of the frame.
         min_green_area (int): The minimum area of the green line to be considered valid.
 
     Returns:
@@ -42,9 +44,15 @@ def get_green_position(green_info, line_info, line_touches_left, line_touches_ri
                     green_position["right_of_line"] = True
 
             if green_info["center_y"] < line_info["center_y"]:
-                green_position["ahead_of_line"] = True
-            else:
-                green_position["behind_line"] = True
+                if line_touches_bottom and not line_touches_top:
+                    green_position["behind_line"] = True
+                else:
+                    green_position["ahead_of_line"] = True
+            elif green_info["center_y"] > line_info["center_y"]:
+                if line_touches_top and not line_touches_bottom:
+                    green_position["ahead_of_line"] = True
+                else:
+                    green_position["behind_line"] = True
         else:
             return green_position
 
