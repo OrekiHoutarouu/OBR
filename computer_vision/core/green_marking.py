@@ -1,16 +1,12 @@
 import cv2
 from computer_vision.core import utils
 
-def get_green_position(green_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom, min_green_area=5000):
+def get_green_position(green_info, line_info, min_green_area=5000):
     """Determine the position of the green marking relative to the detected line.
 
     Args:
         green_info (dict): A dictionary containing information about the green marking position and orientation.
         line_info (dict): A dictionary containing information about the detected line's position and orientation.
-        line_touches_left (bool): Whether the line touches the left edge of the frame.
-        line_touches_right (bool): Whether the line touches the right edge of the frame.
-        line_touches_top (bool): Whether the line touches the top edge of the frame.
-        line_touches_bottom (bool): Whether the line touches the bottom edge of the frame.
         min_green_area (int): The minimum area of the green line to be considered valid.
 
     Returns:
@@ -33,23 +29,23 @@ def get_green_position(green_info, line_info, line_touches_left, line_touches_ri
 
         if green_info["area"] >= min_green_area:
             if green_info["center_x"] < line_info["center_x"]:
-                if line_touches_right and not line_touches_left:
+                if line_info["touches_right"] and not line_info["touches_left"]:
                     green_position["right_of_line"] = True
                 else:
                     green_position["left_of_line"] = True
             elif green_info["center_x"] > line_info["center_x"]:
-                if line_touches_left and not line_touches_right:
+                if line_info["touches_left"] and not line_info["touches_right"]:
                     green_position["left_of_line"] = True
                 else:
                     green_position["right_of_line"] = True
 
             if green_info["center_y"] < line_info["center_y"]:
-                if line_touches_bottom and not line_touches_top:
+                if line_info["touches_bottom"] and not line_info["touches_top"]:
                     green_position["behind_line"] = True
                 else:
                     green_position["ahead_of_line"] = True
             elif green_info["center_y"] > line_info["center_y"]:
-                if line_touches_top and not line_touches_bottom:
+                if line_info["touches_top"] and not line_info["touches_bottom"]:
                     green_position["ahead_of_line"] = True
                 else:
                     green_position["behind_line"] = True

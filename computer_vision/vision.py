@@ -1,4 +1,4 @@
-from .core import contours, green_marking, image_processing, skeleton, utils, webcam
+from .core import contours, green_marking, image_processing, utils, webcam
 from debug.debug_server import draw_debug_frame
 import numpy as np
 import cv2
@@ -91,12 +91,18 @@ def update(capture):
     fourth_largest_green_contour_info = contours.get_contour_info(largest_green_contours[3], frame_center_x)
 
     line_info = contours.get_contour_info(line_contours, frame_center_x)
+    line_info.update({
+        "touches_left": line_touches_left,
+        "touches_right": line_touches_right,
+        "touches_top": line_touches_top,
+        "touches_bottom": line_touches_bottom
+    })
     #red_info = contours.get_contour_info(red_contours, frame_center_x)
     
-    first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
-    second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
-    third_largest_green_position = green_marking.get_green_position(third_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
-    fourth_largest_green_position = green_marking.get_green_position(fourth_largest_green_contour_info, line_info, line_touches_left, line_touches_right, line_touches_top, line_touches_bottom)
+    first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info)
+    second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info)
+    third_largest_green_position = green_marking.get_green_position(third_largest_green_contour_info, line_info)
+    fourth_largest_green_position = green_marking.get_green_position(fourth_largest_green_contour_info, line_info)
 
     green_dispersion = green_marking.get_green_dispersion(first_largest_green_position, 
                                                             second_largest_green_position,
@@ -113,10 +119,6 @@ def update(capture):
         "latency": round((time.perf_counter() - start) * 1000, 2),
         "line_info": line_info,
         "green_dispersion": green_dispersion,
-        "line_touches_left": line_touches_left,
-        "line_touches_right": line_touches_right,
-        "line_touches_top": line_touches_top,
-        "line_touches_bottom": line_touches_bottom
     }
     last_debug_info = debug_info
 

@@ -1,7 +1,7 @@
 import traceback
 from computer_vision import vision
 from computer_vision.core import webcam
-from controller import green_logic, line_follower
+from controller import gap_logic, green_logic, line_follower
 from debug.debug_server import start
 from open_rdk import CommsRuntime
 from time import sleep
@@ -27,7 +27,10 @@ def main():
         try:
             vision_state = vision.update(capture)
             line_follower.update(vision_state, left_motor, right_motor)
-            green_logic.update(vision_state, left_motor, right_motor)
+            gap_logic.update(vision_state, left_motor, right_motor)
+
+            if any(vision_state["green_dispersion"].values()):
+                green_logic.update(vision_state, left_motor, right_motor)
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
