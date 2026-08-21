@@ -15,7 +15,7 @@ def update(line_info, left_motor, right_motor):
     error = line_info["offset_from_frame_center"]
     correction = pid.update(error)
 
-    left_speed = -(BASE_SPEED - correction)
+    left_speed = BASE_SPEED - correction
     right_speed = -(BASE_SPEED + correction)
 
     left_speed = max(-MAX_SPEED, min(MAX_SPEED, left_speed))

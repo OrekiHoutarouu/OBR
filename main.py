@@ -1,13 +1,12 @@
 import traceback
 from computer_vision import vision
 from computer_vision.core import webcam
-from controller import gap_logic, green_logic, line_follower
-from debug.debug_server import start
+from controller import gap_logic, green_logic, line_follower, red_logic
 from openrdk import CommsRuntime
 from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
-# View webcam at "http://localhost:5000/video"
+# View webcam at "http://localhost:5000"
 
 def main():
     capture = webcam.get_webcam()
@@ -20,8 +19,7 @@ def main():
 
     left_motor = openrdk.traction(openrdk.get_serial_by_name("left_motor"))
     right_motor = openrdk.traction(openrdk.get_serial_by_name("right_motor"))
-
-    start()
+    previous_green_detected = False
 
     while True:
         try:
@@ -29,13 +27,14 @@ def main():
             line_follower.update(line_info, left_motor, right_motor)
             gap_logic.update(line_info, left_motor, right_motor)
 
-            if any(green_dispersion.values()):
-                green_logic.update(green_dispersion, left_motor, right_motor)
-            elif red_on_track:
-                left_motor.stop()
-                right_motor.stop()
+            green_detected = any(green_dispersion.values())
 
-                sleep(10)
+            if green_detected and not previous_green_detected:
+                green_logic.update(green_dispersion, left_motor, right_motor)
+            previous_green_detected = green_detected
+            
+            if red_on_track:
+                red_logic.update(left_motor, right_motor)
 
             sleep(0.1)
 

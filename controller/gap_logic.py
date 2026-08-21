@@ -1,6 +1,6 @@
 from time import sleep
 
-HOLD_STRAIGHT = 2
+HOLD_STRAIGHT = 1.5
 SPEED = 50
 
 def update(line_info, left_motor, right_motor, max_gap_area=10000):

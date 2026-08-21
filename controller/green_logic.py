@@ -1,10 +1,10 @@
 from time import sleep
 
 SPEED = 50   
-HOLD_FULL_TURN = 1.6 
-HOLD_QUARTER_TURN  = 0.8
+HOLD_FULL_TURN = 3
+HOLD_QUARTER_TURN  = 1.5
 HOLD_STRAIGHT = 1
-HOLD_IGNORE = 2
+HOLD_IGNORE = 1.5
 HOLD_STOP = 0.5
 
 def update(green_dispersion, left_motor, right_motor):
@@ -29,7 +29,7 @@ def update(green_dispersion, left_motor, right_motor):
 
         sleep(HOLD_FULL_TURN)
 
-    elif green_dispersion["bottom_left"]:
+    elif green_dispersion["bottom_left"] or green_dispersion["top_left"]:
         print("Turn left")
 
         left_motor.move(SPEED)
@@ -52,12 +52,7 @@ def update(green_dispersion, left_motor, right_motor):
 
         sleep(HOLD_STOP)
 
-        left_motor.move(SPEED)
-        right_motor.move(SPEED)
-
-        sleep(HOLD_STRAIGHT)
-
-    elif green_dispersion["bottom_right"]:
+    elif green_dispersion["bottom_right"] or green_dispersion["top_right"]:
         print("Turn right")
 
         left_motor.move(SPEED)
@@ -79,11 +74,6 @@ def update(green_dispersion, left_motor, right_motor):
         right_motor.stop()
 
         sleep(HOLD_STOP)
-
-        left_motor.move(SPEED)
-        right_motor.move(SPEED)
-
-        sleep(HOLD_STRAIGHT)
 
     else:
         print("Ignore")

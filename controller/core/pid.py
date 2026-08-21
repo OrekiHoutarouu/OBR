@@ -1,6 +1,6 @@
 from time import time
 
-KP = 0.18
+KP = 0.2
 KI = 0
 KD = 0.02
 
