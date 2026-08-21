@@ -46,7 +46,7 @@ def apply_green_mask(frame):
         numpy.ndarray: The frame with the green mask applied.
     """
 
-    lower_green = numpy.array([45, 70, 40])
+    lower_green = numpy.array([40, 80, 40])
     upper_green = numpy.array([85, 255, 255])
 
     frame_green_mask = cv2.inRange(
@@ -68,10 +68,10 @@ def apply_red_mask(frame):
         numpy.ndarray: The frame with the green mask applied.
     """
 
-    lower_red1 = numpy.array([0, 120, 150])
-    upper_red1 = numpy.array([5, 255, 255])
-
-    lower_red2 = numpy.array([170, 120, 150])
+    lower_red1 = numpy.array([0, 70, 50])
+    upper_red1 = numpy.array([10, 255, 255])
+    
+    lower_red2 = numpy.array([160, 70, 50])
     upper_red2 = numpy.array([180, 255, 255])
 
     red_mask1 = cv2.inRange(

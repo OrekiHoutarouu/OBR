@@ -28,6 +28,7 @@ def update(capture):
     global last_frame
     global last_frame_time
     global last_debug_info
+    red_on_track = False
 
     current_time = time.time()
     fps = 1 / (current_time - last_frame_time)
@@ -56,23 +57,23 @@ def update(capture):
     roi_black_mask = cv2.bitwise_and(
         roi_black_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(roi_green_mask, roi_red_mask)
+        cv2.bitwise_or(roi_green_mask, roi_red_mask)
         )
     )
 
     roi_green_mask = cv2.bitwise_and(
         roi_green_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(roi_black_mask, roi_red_mask)
+        cv2.bitwise_or(roi_black_mask, roi_red_mask)
         )
     )
 
     roi_red_mask = cv2.bitwise_and(
         roi_red_mask,
         cv2.bitwise_not(
-            cv2.bitwise_or(roi_black_mask, roi_green_mask)
+        cv2.bitwise_or(roi_black_mask, roi_green_mask)
         )
-    )
+    ) 
 
     line_touches_left = bool(np.any(frame_black_mask[:, 0] > 0))
     line_touches_right = bool(np.any(frame_black_mask[:, -1] > 0))
@@ -81,7 +82,7 @@ def update(capture):
 
     line_contours = contours.find_contours(roi_black_mask)
     green_contours = contours.find_contours(roi_green_mask)
-    #red_contours, _ = contours.find_contours(roi_red_mask)
+    red_contours = contours.find_contours(roi_red_mask)
 
     largest_green_contours = contours.get_four_largest_contours(green_contours)
 
@@ -97,7 +98,10 @@ def update(capture):
         "touches_top": line_touches_top,
         "touches_bottom": line_touches_bottom
     })
-    #red_info = contours.get_contour_info(red_contours, frame_center_x)
+
+    red_info = contours.get_contour_info(red_contours, frame_center_x)
+    if red_info["area"] > 7000:
+        red_on_track = True
     
     first_largest_green_position = green_marking.get_green_position(first_largest_green_contour_info, line_info)
     second_largest_green_position = green_marking.get_green_position(second_largest_green_contour_info, line_info)
@@ -109,7 +113,7 @@ def update(capture):
                                                             third_largest_green_position,
                                                             fourth_largest_green_position)
 
-    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, fps, roi_offset_y)
+    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, red_contours, roi_offset_y)
     last_frame = debug_frame
 
     debug_info = {
@@ -122,4 +126,4 @@ def update(capture):
     }
     last_debug_info = debug_info
 
-    return line_info, green_dispersion
+    return line_info, green_dispersion, red_on_track

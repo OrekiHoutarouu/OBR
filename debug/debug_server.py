@@ -83,7 +83,7 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, threaded=True)
 
 
-def draw_debug_frame(frame, line_contour, line_info, green_contours, fps, roi_offset_y=0):
+def draw_debug_frame(frame, line_contour, line_info, green_contours, red_contours, roi_offset_y=0):
     """Draw a debug frame with the detected line and green contours.
 
     Args:
@@ -143,7 +143,7 @@ def draw_debug_frame(frame, line_contour, line_info, green_contours, fps, roi_of
         )
 
     if green_contours:
-        MIN_GREEN_AREA = 8000
+        MIN_GREEN_AREA = 5000
         valid_green_contours = [
             c for c in green_contours
             if c is not None and hasattr(c, "shape") and cv2.contourArea(c) >= MIN_GREEN_AREA
@@ -155,6 +155,29 @@ def draw_debug_frame(frame, line_contour, line_info, green_contours, fps, roi_of
                 shifted_green_contours,
                 -1,
                 (0, 255, 0),
+                2
+            )
+    if red_contours:
+        MIN_RED_AREA = 7000
+
+        valid_red_contours = [
+            c for c in red_contours
+            if c is not None
+            and hasattr(c, "shape")
+            and cv2.contourArea(c) >= MIN_RED_AREA
+        ]
+
+        if valid_red_contours:
+            shifted_red_contours = [
+                _offset_contour(c, roi_offset_y)
+                for c in valid_red_contours
+            ]
+
+            cv2.drawContours(
+                debug_frame,
+                shifted_red_contours,
+                -1,
+                (0, 0, 255),
                 2
             )
 

@@ -3,7 +3,7 @@ from computer_vision import vision
 from computer_vision.core import webcam
 from controller import gap_logic, green_logic, line_follower
 from debug.debug_server import start
-from open_rdk import CommsRuntime
+from openrdk import CommsRuntime
 from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
@@ -25,12 +25,19 @@ def main():
 
     while True:
         try:
-            vision_state = vision.update(capture)
-            line_follower.update(vision_state, left_motor, right_motor)
-            gap_logic.update(vision_state, left_motor, right_motor)
+            line_info, green_dispersion, red_on_track = vision.update(capture)
+            line_follower.update(line_info, left_motor, right_motor)
+            gap_logic.update(line_info, left_motor, right_motor)
 
-            if any(vision_state["green_dispersion"].values()):
-                green_logic.update(vision_state, left_motor, right_motor)
+            if any(green_dispersion.values()):
+                green_logic.update(green_dispersion, left_motor, right_motor)
+            elif red_on_track:
+                left_motor.stop()
+                right_motor.stop()
+
+                sleep(10)
+
+            sleep(0.1)
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
