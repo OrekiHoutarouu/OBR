@@ -1,6 +1,5 @@
 from .utils import get_offset
 import cv2
-import numpy as np
 
 def find_contours(frame):
     """Find contours in the frame.

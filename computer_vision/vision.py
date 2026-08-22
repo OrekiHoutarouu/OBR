@@ -7,6 +7,7 @@ import time
 last_frame = None
 last_frame_time = time.time()
 last_debug_info = {}
+red_on_track = False
 
 def update(capture):
     """Update the vision state based on the current frame from the webcam.
@@ -19,6 +20,7 @@ def update(capture):
     """
 
     frame = webcam.get_frame(capture)
+
     if frame is None:
         print("No frame captured from webcam.")
         return
@@ -28,7 +30,7 @@ def update(capture):
     global last_frame
     global last_frame_time
     global last_debug_info
-    red_on_track = False
+    global red_on_track
 
     current_time = time.time()
     fps = 1 / (current_time - last_frame_time)
@@ -37,12 +39,11 @@ def update(capture):
 
     follow_line_roi = image_processing.get_roi(frame, "bottom")
     roi_offset_y = int(frame.shape[0] * 0.4)
-    frame_center_x = utils.get_frame_center_x(follow_line_roi)
-    webcam_resolution = f"{frame.shape[1]}x{frame.shape[0]}"
+    frame_center_x = utils.get_frame_center_x(frame)
 
     frame_grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     roi_grayscale = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2GRAY)
-    roi_hsv = roi_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
+    roi_hsv = cv2.cvtColor(follow_line_roi, cv2.COLOR_BGR2HSV)
     roi_hsv_clahe = image_processing.get_hsv_clahe(roi_hsv)
 
     frame_grayscale_blur = cv2.GaussianBlur(frame_grayscale, (5, 5), 0)
@@ -119,7 +120,7 @@ def update(capture):
     debug_info = {
         "current_feature": "Working on it",
         "fps": fps,
-        "webcam_resolution": webcam_resolution,
+        "webcam_resolution": f"{frame.shape[1]}x{frame.shape[0]}",
         "latency": round((time.perf_counter() - start) * 1000, 2),
         "line_info": line_info,
         "green_dispersion": green_dispersion,

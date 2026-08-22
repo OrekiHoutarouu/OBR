@@ -1,6 +1,5 @@
 import cv2, numpy
 
-
 def get_hsv_clahe(frame):
     """Applies CLAHE to the HSV frame.
 
