@@ -30,6 +30,7 @@ def main():
             green_detected = any(green_dispersion.values())
 
             if green_detected and not previous_green_detected:
+                
                 green_logic.update(green_dispersion, left_motor, right_motor)
             previous_green_detected = green_detected
             
