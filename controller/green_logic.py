@@ -13,11 +13,11 @@ def update(green_dispersion, left_motor, right_motor):
         print("Turn back")
         basic_movements.half_turn_left(left_motor, right_motor)
 
-    elif green_dispersion["bottom_left"] or green_dispersion["top_left"]:
+    elif green_dispersion["bottom_left"]:
         print("Turn left")
         basic_movements.quarter_turn_left(left_motor, right_motor)
 
-    elif green_dispersion["bottom_right"] or green_dispersion["top_right"]:
+    elif green_dispersion["bottom_right"]:
         print("Turn right")
         basic_movements.quarter_turn_right(left_motor, right_motor)
 

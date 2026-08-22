@@ -2,6 +2,7 @@ import traceback
 from computer_vision import vision
 from computer_vision.core import webcam
 from controller import gap_logic, green_logic, line_follower, red_logic
+from controller.core import basic_movements
 from openrdk import CommsRuntime
 from time import sleep
 
@@ -19,7 +20,10 @@ def main():
 
     left_motor = openrdk.traction(openrdk.get_serial_by_name("left_motor"))
     right_motor = openrdk.traction(openrdk.get_serial_by_name("right_motor"))
+    
     previous_green_detected = False
+    previous_red_detected = False
+    previous_gap_detected = False
 
     while True:
         try:
@@ -30,13 +34,19 @@ def main():
             green_detected = any(green_dispersion.values())
 
             if green_detected and not previous_green_detected:
-                
-                green_logic.update(green_dispersion, left_motor, right_motor)
+                basic_movements.go_straight_shorter(left_motor, right_motor)
+                _, green_dispersion, _= vision.update(capture)
+
+                green_detected = any(green_dispersion.values())
+                if green_detected:
+                    green_logic.update(green_dispersion, left_motor, right_motor)
+
             previous_green_detected = green_detected
             
             if red_on_track:
                 red_logic.update(left_motor, right_motor)
 
+            previous_red_detected = red_on_track
             sleep(0.1)
 
         except KeyboardInterrupt:

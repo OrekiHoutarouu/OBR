@@ -46,7 +46,7 @@ def apply_green_mask(frame):
     """
 
     lower_green = numpy.array([40, 80, 40])
-    upper_green = numpy.array([85, 255, 255])
+    upper_green = numpy.array([110, 255, 255])
 
     frame_green_mask = cv2.inRange(
         frame,
