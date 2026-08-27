@@ -1,4 +1,4 @@
-import cv2, numpy
+import cv2, numpy, time
 
 def get_hsv_clahe(frame):
     """Applies CLAHE to the HSV frame.
@@ -30,7 +30,7 @@ def apply_black_mask(frame):
         numpy.ndarray: The frame with the black mask applied.
     """
 
-    frame_black_mask = cv2.threshold(frame, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    frame_black_mask = cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY_INV)
 
     return frame_black_mask
 
@@ -46,7 +46,7 @@ def apply_green_mask(frame):
     """
 
     lower_green = numpy.array([40, 80, 40])
-    upper_green = numpy.array([110, 255, 255])
+    upper_green = numpy.array([96, 255, 255])
 
     frame_green_mask = cv2.inRange(
         frame,

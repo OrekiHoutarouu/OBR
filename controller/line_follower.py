@@ -1,6 +1,6 @@
 from .core import pid
 
-BASE_SPEED = 15
+BASE_SPEED = 20
 MAX_SPEED = 100
 
 def update(line_info, left_motor, right_motor):

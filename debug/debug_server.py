@@ -143,7 +143,7 @@ def draw_debug_frame(frame, line_contour, line_info, green_contours, red_contour
         )
 
     if green_contours:
-        MIN_GREEN_AREA = 9000
+        MIN_GREEN_AREA = 8000
         valid_green_contours = [
             c for c in green_contours
             if c is not None and hasattr(c, "shape") and cv2.contourArea(c) >= MIN_GREEN_AREA

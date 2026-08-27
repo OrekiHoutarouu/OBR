@@ -1,3 +1,4 @@
+from .core import basic_movements
 from time import sleep
 
 def update(left_motor, right_motor):
@@ -8,12 +9,9 @@ def update(left_motor, right_motor):
         right_motor (TractionModule): Right motor object from the OpenRDK library.
     """
 
-    left_motor.move(50)
-    right_motor.move(50)
-
-    sleep(1)
+    basic_movements.go_straight_normal(left_motor, right_motor)
 
     left_motor.stop()
     right_motor.stop()
 
-    sleep(10)
+    raise Exception("The robot reached the end of the track!")

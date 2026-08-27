@@ -79,7 +79,7 @@ def update(capture):
     line_touches_left = bool(np.any(frame_black_mask[:, 0] > 0))
     line_touches_right = bool(np.any(frame_black_mask[:, -1] > 0))
     line_touches_top = bool(np.any(frame_black_mask[0, :] > 0))
-    line_touches_bottom = bool(np.any(frame_black_mask[-1, :] > 0))
+    line_touches_bottom = bool(np.any(frame_black_mask[-80, :] > 0))
 
     line_contours = contours.find_contours(roi_black_mask)
     green_contours = contours.find_contours(roi_green_mask)

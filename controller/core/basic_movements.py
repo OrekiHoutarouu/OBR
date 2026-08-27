@@ -6,8 +6,8 @@ HOLD_HALF_TURN = 3.5
 HOLD_QUARTER_TURN  = 1.5
 HOLD_STRAIGHT_LONGER = 0.9
 HOLD_STRAIGHT_NORMAL = 0.6
-HOLD_STRAIGHT_SHORTER = 0.3
-HOLD_IGNORE = 1.5
+HOLD_STRAIGHT_SHORTER = 0.1
+HOLD_IGNORE = 1
 HOLD_STOP = 0.5
 
 def go_straight_longer(left_motor, right_motor):
@@ -29,6 +29,9 @@ def go_straight_shorter(left_motor, right_motor):
     right_motor.move(SPEED)
 
     sleep(HOLD_STRAIGHT_SHORTER)
+
+    left_motor.stop()
+    right_motor.stop()
 
 
 def half_turn_left(left_motor, right_motor):
