@@ -11,6 +11,13 @@ HOLD_IGNORE = 1
 HOLD_STOP = 0.5
 
 def go_straight_longer(left_motor, right_motor):
+    """Drive both motors forward for a longer straight movement.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 
@@ -18,6 +25,13 @@ def go_straight_longer(left_motor, right_motor):
 
 
 def go_straight_normal(left_motor, right_motor):
+    """Drive both motors forward for a normal straight movement.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 
@@ -25,16 +39,27 @@ def go_straight_normal(left_motor, right_motor):
 
 
 def go_straight_shorter(left_motor, right_motor):
+    """Drive both motors forward for a short straight movement.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 
     sleep(HOLD_STRAIGHT_SHORTER)
 
-    left_motor.stop()
-    right_motor.stop()
-
 
 def half_turn_left(left_motor, right_motor):
+    """Stop and turn the robot halfway to the left.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.stop()
     right_motor.stop()
 
@@ -47,6 +72,13 @@ def half_turn_left(left_motor, right_motor):
 
 
 def half_turn_right(left_motor, right_motor):
+    """Stop and turn the robot halfway to the right.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.stop()
     right_motor.stop()
 
@@ -59,6 +91,13 @@ def half_turn_right(left_motor, right_motor):
 
 
 def quarter_turn_right(left_motor, right_motor):
+    """Advance briefly, then turn the robot a quarter turn to the right.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 
@@ -81,6 +120,13 @@ def quarter_turn_right(left_motor, right_motor):
 
 
 def quarter_turn_left(left_motor, right_motor):
+    """Advance briefly, then turn the robot a quarter turn to the left.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 
@@ -103,6 +149,13 @@ def quarter_turn_left(left_motor, right_motor):
 
 
 def ignore(left_motor, right_motor):
+    """Drive both motors forward while ignoring the current marking.
+
+    Args:
+        left_motor (TractionModule): The left motor object.
+        right_motor (TractionModule): The right motor object.
+    """
+
     left_motor.move(SPEED)
     right_motor.move(SPEED)
 

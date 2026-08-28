@@ -13,13 +13,15 @@ from debug.debug_server import start
 # View webcam at "http://localhost:5000"
 
 def main():
+    """Start webcam vision processing and the debug web server."""
+
     capture = webcam.get_webcam()
 
     start()
 
     while True:
         try:
-            vision_info = vision.update(capture)
+            vision_info = vision.update(capture, debug=True)
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")

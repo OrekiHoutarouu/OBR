@@ -5,6 +5,8 @@ from time import sleep
 # Run with "python debug/webview_test.py"
 
 def main():
+    """Start the OpenRDK webview and keep it running until interrupted."""
+
     openrdk = CommsRuntime(auto_start=True, enable_webview=True, enable_webview_updates=True)
 
     sleep(2)

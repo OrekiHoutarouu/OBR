@@ -3,14 +3,14 @@ from sensors import distance_sensor
 from computer_vision import vision
 from computer_vision.core import webcam
 from controller import gap_logic, green_logic, line_follower, obstacle_logic, red_logic
-from controller.core import basic_movements
 from openrdk import CommsRuntime
 from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
-# View webcam at "http://localhost:5000"
 
 def main():
+    """Start the robot runtime and continuously execute its control loop."""
+
     capture = webcam.get_webcam()
     openrdk = CommsRuntime(auto_start=True, enable_webview=True, enable_webview_updates=True)
 
@@ -24,7 +24,6 @@ def main():
     #distance_sensor = openrdk.distance_sensor(openrdk.get_serial_by_name("distance_sensor_module"))
     
     previous_green_detected = False
-    previous_red_detected = False
     previous_gap_detected = False
     previous_obstacle_detected = False
 
@@ -38,40 +37,8 @@ def main():
             green_detected = any(green_dispersion.values())
 
             if green_detected and not previous_green_detected:
-                basic_movements.go_straight_shorter(left_motor, right_motor)
+                green_detected = green_logic.do_second_green_check(capture, vision, left_motor, right_motor)
 
-                sleep(2.0)
-
-                green_frame_count = 10
-                green_detection_counts = {
-                    "top_left": 0,
-                    "top_right": 0,
-                    "bottom_left": 0,
-                    "bottom_right": 0
-                }
-
-                for _ in range(green_frame_count):
-                    line_info, current_green_dispersion, red_on_track = vision.update(capture)
-                    print(f">>> GREEN CHECK: {current_green_dispersion}")
-
-                    for position, detected in current_green_dispersion.items():
-                        green_detection_counts[position] += int(detected)
-
-                    sleep(0.05)
-
-                minimum_confirmations = green_frame_count // 2 + 1
-                confirmed_green_dispersion = {
-                    position: count >= minimum_confirmations
-                    for position, count in green_detection_counts.items()
-                }
-
-                green_dispersion = confirmed_green_dispersion
-                print(
-                    f">>> CONFIRMED GREEN: {green_dispersion} "
-                    f"({green_detection_counts}/{green_frame_count})"
-                )
-
-                green_detected = any(green_dispersion.values())
                 if green_detected:
                     green_logic.update(green_dispersion, left_motor, right_motor)
 
@@ -80,13 +47,10 @@ def main():
             if red_on_track:
                 red_logic.update(left_motor, right_motor)
 
-            previous_red_detected = red_on_track
-
             #if obstacle_on_track:
             #    obstacle_logic.update(left_motor, right_motor)
 
             #previous_obstacle_detected = obstacle_on_track
-
 
             sleep(0.1)
 

@@ -9,11 +9,12 @@ last_frame_time = time.time()
 last_debug_info = {}
 red_on_track = False
 
-def update(capture):
+def update(capture, debug=False):
     """Update the vision state based on the current frame from the webcam.
 
     Args:
         capture (cv2.VideoCapture): The webcam capture object.
+        debug (bool): Whether to draw and store the debug frame.
 
     Returns:
         dict: A dictionary containing the updated vision state.
@@ -114,8 +115,15 @@ def update(capture):
                                                             third_largest_green_position,
                                                             fourth_largest_green_position)
 
-    debug_frame = draw_debug_frame(frame, line_contours, line_info, largest_green_contours, red_contours, roi_offset_y)
-    last_frame = debug_frame
+    if debug:
+        last_frame = draw_debug_frame(
+            frame,
+            line_contours,
+            line_info,
+            largest_green_contours,
+            red_contours,
+            roi_offset_y
+        )
 
     debug_info = {
         "current_feature": "Working on it",
