@@ -44,6 +44,12 @@ This repository holds the full onboard software for team **RoboVante**'s robot: 
 - ✅ **Browser-based debug dashboard** — live camera stream with detection overlay plus real-time telemetry.
 - 🚧 **Obstacle avoidance** — maneuver logic and distance-sensor reading are already implemented but currently disabled in `main.py` (still under development/tuning).
 
+## Preview 👀
+
+<p align="center">
+  <img src="official_robot.jpg" width="50%"> 
+</p>
+
 ## 🧠 Architecture
 
 The software is split into four independent modules: **computer vision** (interprets the track), **control** (decides the movement), **sensors** (auxiliary hardware), and **debug** (real-time browser visualization).
