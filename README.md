@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 RoboVante — Line Follower Robot (OBR)
+# RoboVante — Line Follower Robot (OBR) 🤖
 
 **Autonomous line-following robot developed by team RoboVante for the Brazilian Robotics Olympiad (OBR), representing the state of Bahia.**
 
@@ -18,7 +18,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents 📑
 
 - [About the project](#-about-the-project)
 - [Features](#-features)
@@ -33,20 +33,20 @@
 
 ---
 
-## 📖 About the project
+## About the project 📖
 
 OBR (*Olimpíada Brasileira de Robótica* — Brazilian Robotics Olympiad) is a national science competition that encourages the study of robotics and programming among Brazilian students, with both theoretical and practical stages — including the **Line Follower** category, in which this robot competes.
 
 This repository holds the full onboard software for team **RoboVante**'s robot: a line follower that uses **computer vision** (webcam + OpenCV) to interpret the track in real time, paired with a hardware communication framework (**OpenRDK**) to drive the motors. The robot follows the track's black line, reads green markings to decide which way to go at intersections, recognizes the red finish marking, and handles gaps in the line.
 
-## ✨ Features
+## Features ✨
 
-- ✅ **PID line following** — continuously corrects the robot's trajectory based on the line's offset from the camera's center.
-- ✅ **Intersection detection (green markings)** — analyzes the dispersion of green markings around the line to decide between going straight, turning left, turning right, or making a U-turn.
-- ✅ **Finish line detection (red marking)** — recognizes the finish line and automatically stops the robot.
-- ✅ **Line gap handling** — keeps the robot moving straight when the line momentarily disappears from view.
-- ✅ **Browser-based debug dashboard** — live camera stream with detection overlay plus real-time telemetry.
-- 🚧 **Obstacle avoidance** — maneuver logic and distance-sensor reading are already implemented but currently disabled in `main.py` (still under development/tuning).
+- 🎯 **PID line following** — continuously corrects the robot's trajectory based on the line's offset from the camera's center.
+- 🟢 **Intersection detection (green markings)** — analyzes the dispersion of green markings around the line to decide between going straight, turning left, turning right, or making a U-turn.
+- 🛑 **Finish line detection (red marking)** — recognizes the finish line and automatically stops the robot.
+- 🛤️ **Line gap handling** — keeps the robot moving straight when the line momentarily disappears from view. 
+- 📡 **Browser-based debug dashboard** — live camera stream with detection overlay plus real-time telemetry. 📡
+- 🚧 **Obstacle avoidance** — maneuver logic and distance-sensor reading are already implemented but currently disabled in `main.py` (still under development/tuning). 
 
 ## Preview 👀
 
@@ -54,7 +54,7 @@ This repository holds the full onboard software for team **RoboVante**'s robot: 
   <img src="official_robot.jpg" width="50%"> 
 </p>
 
-## 🧠 Architecture
+## Architecture 🧠
 
 The software is split into four independent modules: **computer vision** (interprets the track), **control** (decides the movement), **sensors** (auxiliary hardware), and **debug** (real-time browser visualization).
 
@@ -99,7 +99,7 @@ For every frame captured from the webcam:
 | `obstacle_logic.py` | Predefined maneuver sequence to drive around obstacles (not currently triggered in `main.py`). |
 | `core/pid.py` / `core/basic_movements.py` | PID implementation and basic movements (straights and turns with pre-tuned durations). |
 
-## 🗂️ Repository structure
+## Repository structure 🗂️
 
 ```
 OBR/
@@ -135,7 +135,7 @@ OBR/
 └── LICENSE
 ```
 
-## 🖥️ Debug dashboard
+## Debug dashboard 🖥️
 
 The `debug/` module runs a local **Flask** server (`http://localhost:5000`) featuring:
 
@@ -144,7 +144,7 @@ The `debug/` module runs a local **Flask** server (`http://localhost:5000`) feat
 
 This dashboard is independent from OpenRDK's native webview (enabled in `main.py` via `enable_webview=True`), which exposes telemetry for the devices connected to the board.
 
-## 🔧 Tech stack & hardware
+## Tech stack & hardware 🔧
 
 - **Python 3** — the project's main language.
 - **OpenCV + NumPy** — image processing and contour detection.
@@ -154,14 +154,15 @@ This dashboard is independent from OpenRDK's native webview (enabled in `main.py
 - **USB webcam** — the robot's primary vision sensor.
 - Two traction motors (`left_motor`, `right_motor`) and a distance sensor (`distance_sensor_module`), identified via `openrdk.get_serial_by_name`.
 
-## 🚀 Getting started
+## Getting started 🚀
 
 ### Prerequisites
 
-- Python 3.10+
-- Git (with submodule support)
-- USB webcam
-- A robot/board compatible with OpenRDK, with the motors connected
+- 🐍 Python 3.10+
+- 📦 Git (with submodule support)
+- 🖥️ Raspberry Pi 4 or another compatible single-board computer (SBC)
+- 📷 USB webcam
+- 🤖 Robot platform compatible with OpenRDK, with motors and motor controller connected
 
 ### Installation
 
@@ -189,7 +190,7 @@ On Windows (PowerShell):
 $env:PYTHONPATH="open_rdk/host/main/src"; python main.py
 ```
 
-## 🧪 Tests
+## Tests 🧪
 
 - **Computer vision in isolation** (no hardware/motors required, great for tuning the color masks):
 
@@ -205,11 +206,11 @@ $env:PYTHONPATH="open_rdk/host/main/src"; python main.py
   python tests/webview_test.py
   ```
 
-## 📄 License
+## License 📄
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
+## Team 👥
 
 Developed by team **RoboVante**, representing Bahia at the Brazilian Robotics Olympiad (OBR).
 
