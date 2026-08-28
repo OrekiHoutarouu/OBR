@@ -4,11 +4,15 @@
 
 **Autonomous line-following robot developed by team RoboVante for the Brazilian Robotics Olympiad (OBR), representing the state of Bahia.**
 
+![Contributors](https://img.shields.io/github/contributors/OrekiHoutarouu/HandTune?style=plastic)
+![Forks](https://img.shields.io/github/forks/OrekiHoutarouu/HandTune)
+![Stars](https://img.shields.io/github/stars/OrekiHoutarouu/HandTune)
+![Licence](https://img.shields.io/github/license/OrekiHoutarouu/HandTune)
+![Issues](https://img.shields.io/github/issues/OrekiHoutarouu/HandTune)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![OpenCV](https://img.shields.io/badge/OpenCV-5.0-5C3EE8?logo=opencv&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-3.1-000000?logo=flask&logoColor=white)
 ![OpenRDK](https://img.shields.io/badge/hardware-OpenRDK-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 </div>
 
