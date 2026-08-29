@@ -37,12 +37,16 @@ def do_second_green_check(capture, vision, left_motor, right_motor):
         right_motor (TractionModule): The right motor object.
 
     Returns:
-        bool: Whether the green marking was confirmed.
+        tuple: (green_detected, confirmed_green_dispersion) where green_detected is a bool
+               and confirmed_green_dispersion is the confirmed dispersion dict.
     """
 
     basic_movements.go_straight_shorter(left_motor, right_motor)
     
-    sleep(1)
+    left_motor.stop()
+    right_motor.stop()
+    
+    sleep(2.0)
 
     GREEN_MARKING_FRAME_COUNT = 10
     green_detection_counts = {
@@ -74,4 +78,4 @@ def do_second_green_check(capture, vision, left_motor, right_motor):
 
     green_detected = any(green_dispersion.values())
     
-    return green_detected
+    return green_detected, confirmed_green_dispersion

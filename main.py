@@ -1,10 +1,10 @@
+import time
 import traceback
 from sensors import distance_sensor
 from computer_vision import vision
 from computer_vision.core import webcam
 from controller import gap_logic, green_logic, line_follower, obstacle_logic, red_logic
 from openrdk import CommsRuntime
-from time import sleep
 
 # Run with "PYTHONPATH=open_rdk/host/main/src python3 main.py"
 
@@ -14,7 +14,7 @@ def main():
     capture = webcam.get_webcam()
     openrdk = CommsRuntime(auto_start=True, enable_webview=True, enable_webview_updates=True)
 
-    sleep(2)
+    time.sleep(2)
 
     openrdk.list_devices(verbose=True)
     openrdk.post("webview_complete")
@@ -29,6 +29,8 @@ def main():
 
     while True:
         try:
+            start_time = time.perf_counter()
+
             line_info, green_dispersion, red_on_track = vision.update(capture)
             #obstacle_on_track = distance_sensor.update(distance_sensor)
             line_follower.update(line_info, left_motor, right_motor)
@@ -37,10 +39,10 @@ def main():
             green_detected = any(green_dispersion.values())
 
             if green_detected and not previous_green_detected:
-                green_detected = green_logic.do_second_green_check(capture, vision, left_motor, right_motor)
+                green_detected, confirmed_green_dispersion = green_logic.do_second_green_check(capture, vision, left_motor, right_motor)
 
                 if green_detected:
-                    green_logic.update(green_dispersion, left_motor, right_motor)
+                    green_logic.update(confirmed_green_dispersion, left_motor, right_motor)
 
             previous_green_detected = green_detected
             
@@ -52,7 +54,10 @@ def main():
 
             #previous_obstacle_detected = obstacle_on_track
 
-            sleep(0.1)
+            loop_time = time.perf_counter() - start_time
+            print(f"Loop: {loop_time * 1000:.2f} ms")
+
+            time.sleep(0.1)
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt received. Stopping execution...")
