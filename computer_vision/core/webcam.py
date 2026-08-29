@@ -7,7 +7,7 @@ def get_webcam():
     Returns:
         cv2.VideoCapture: The user's main webcam capture object.
     """
-    
+
     if platform.system() == "Windows":
         capture = cv2.VideoCapture(0)
     else:
@@ -15,8 +15,10 @@ def get_webcam():
 
     if not capture.isOpened():
         print("Error: Couldn't open webcam.")
-
         exit()
+
+    capture.set(cv2.CAP_PROP_FPS, 15)
+    capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     return capture
 

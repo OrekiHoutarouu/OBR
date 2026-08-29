@@ -11,7 +11,12 @@ def update(left_motor, right_motor):
     basic_movements.quarter_turn_left(left_motor, right_motor)
     basic_movements.go_straight_longer(left_motor, right_motor)
     basic_movements.quarter_turn_right(left_motor, right_motor)
-    basic_movements.go_straight_longer(left_motor, right_motor)
+
+    left_motor.move(40)
+    right_motor.move(40)
+
+    sleep(1.5)
+
     basic_movements.quarter_turn_right(left_motor, right_motor)
-    basic_movements.go_straight_longer(left_motor, right_motor)
+    basic_movements.go_straight_normal(left_motor, right_motor)
     basic_movements.quarter_turn_left(left_motor, right_motor)

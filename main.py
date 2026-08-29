@@ -21,8 +21,30 @@ def main():
 
     left_motor = openrdk.traction(openrdk.get_serial_by_name("left_motor"))
     right_motor = openrdk.traction(openrdk.get_serial_by_name("right_motor"))
-    #distance_sensor = openrdk.distance_sensor(openrdk.get_serial_by_name("distance_sensor_module"))
-    
+    distance_sensor_module = openrdk.distance_sensor(openrdk.get_serial_by_name("distance_sensor_module"))
+
+    stable_samples = 0
+    target_latency_ms = 35.0
+    startup_deadline = time.perf_counter() + 15.0
+
+    print("Waiting for camera latency to stabilize before starting robot loop...")
+    while time.perf_counter() < startup_deadline:
+        start_time = time.perf_counter()
+        frame_result = vision.update(capture)
+        latency_ms = (time.perf_counter() - start_time) * 1000
+
+        if frame_result is not None and latency_ms <= target_latency_ms:
+            stable_samples += 1
+            if stable_samples >= 10:
+                print(f"Latency stable: {latency_ms:.2f} ms; starting robot loop.")
+                break
+        else:
+            stable_samples = 0
+
+        time.sleep(0.05)
+    else:
+        print("Startup latency did not stabilize within deadline; starting robot loop anyway.")
+
     previous_green_detected = False
     previous_gap_detected = False
     previous_obstacle_detected = False
@@ -32,7 +54,7 @@ def main():
             start_time = time.perf_counter()
 
             line_info, green_dispersion, red_on_track = vision.update(capture)
-            #obstacle_on_track = distance_sensor.update(distance_sensor)
+            obstacle_on_track = distance_sensor.update(distance_sensor_module)
             line_follower.update(line_info, left_motor, right_motor)
             gap_logic.update(line_info, left_motor, right_motor)
 
@@ -49,10 +71,10 @@ def main():
             if red_on_track:
                 red_logic.update(left_motor, right_motor)
 
-            #if obstacle_on_track:
-            #    obstacle_logic.update(left_motor, right_motor)
+            if obstacle_on_track:
+                obstacle_logic.update(left_motor, right_motor)
 
-            #previous_obstacle_detected = obstacle_on_track
+            previous_obstacle_detected = obstacle_on_track
 
             loop_time = time.perf_counter() - start_time
             print(f"Loop: {loop_time * 1000:.2f} ms")

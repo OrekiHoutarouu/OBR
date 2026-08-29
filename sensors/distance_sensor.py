@@ -13,4 +13,4 @@ def update(distance_sensor):
     if distance is None:
         return False
     
-    return distance < 4
+    return distance < 15
